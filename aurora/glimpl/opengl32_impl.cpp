@@ -189,9 +189,9 @@ namespace aurora {
 
 		GLenum e;
 		switch(pWrap) {
-			case RepeatTexture: e = GL_REPEAT; break;
-			case ClampToEdge: e = GL_CLAMP_TO_EDGE; break;
-			case BorderColor: throw std::runtime_error("cannot use this method to set border color");
+			case TextureWrapType::Repeat: e = GL_REPEAT; break;
+			case TextureWrapType::ClampToEdge: e = GL_CLAMP_TO_EDGE; break;
+			case TextureWrapType::BorderColor: throw std::runtime_error("cannot use this method to set border color");
 		}
 
 		glBindTexture(GL_TEXTURE_2D, ref->resource);

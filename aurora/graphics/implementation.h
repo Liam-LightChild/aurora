@@ -25,8 +25,8 @@ namespace aurora {
 		bool stencil: 1 = false;
 	};
 
-	enum TextureWrapType {
-		RepeatTexture,
+	enum class TextureWrapType {
+		Repeat,
 		ClampToEdge,
 		BorderColor,
 	};

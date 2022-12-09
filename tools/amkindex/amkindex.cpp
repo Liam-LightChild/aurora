@@ -33,7 +33,13 @@ int main(int pArgCount, char **pArgs) {
 		}
 	}
 
-	std::ofstream out(vm["output-file"].as<std::string>());
+	auto outPath = std::filesystem::path(vm["output-file"].as<std::string>());
+
+	if(outPath.has_parent_path() && !std::filesystem::exists(outPath.parent_path())) {
+		std::filesystem::create_directories(outPath.parent_path());
+	}
+
+	std::ofstream out(outPath);
 	auto cbor = nlohmann::json::to_cbor(index);
 	out.write(reinterpret_cast<char *>(cbor.data()), static_cast<std::streamsize>(cbor.size()));
 }

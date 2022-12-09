@@ -12,40 +12,59 @@
 #include <optional>
 
 namespace aurora {
-
-	template<typename T>
-	class Asset {
-		std::filesystem::path m_Path;
-		std::optional<std::shared_ptr<T>> m_Value;
-
-	public:
-		explicit Asset(std::filesystem::path pPath) : m_Path(std::move(pPath)) {}
-
-		std::shared_ptr<T> value() {
-			if(!m_Value) { m_Value = std::make_shared<T>(m_Path); }
-			return m_Value.value();
-		}
-
-		/**
-		 * This function does not necessarily guarantee the unloading of the Resource,
-		 * which will only be performed when all references to it are kaput. This method
-		 * just removes the reference contained in this Asset, which will in turn <b>allow</b>
-		 * the data to be unloaded.
-		 */
-		void unload() {
-			m_Value = std::nullopt;
-		}
-	};
-
 	class AssetLoader {
+		struct Ref {
+			void* ptr;
+			int refs;
+		};
+
 		std::unordered_map<std::string, std::filesystem::path> m_Index;
+		std::unordered_map<std::string, Ref*> m_Refs;
+		std::unordered_map<void*, Ref*> m_RefsByPtr;
 
 	public:
 		explicit AssetLoader(const std::filesystem::path &pPath);
 
 		template<typename T>
-		Asset<T> get(const std::string &pAssetId) {
-			return Asset<T>(m_Index[pAssetId]);
+		T *load(const std::string &pAssetId) {
+			if(m_Refs.contains(pAssetId)) {
+				auto ref = m_Refs[pAssetId];
+				ref->refs++;
+				return reinterpret_cast<T*>(ref->ptr);
+			} else {
+				T* ptr = new T(this, m_Index[pAssetId], pAssetId);
+
+				auto r = new Ref {
+					.ptr = ptr,
+					.refs = 1
+				};
+
+				m_Refs[pAssetId] = r;
+				m_RefsByPtr[ptr] = r;
+
+				return ptr;
+			}
+		}
+
+		/**
+		 * Tells the asset loader that the caller is no longer using the asset pointed to
+		 * by pPointer. If the asset is unloaded by this call or does not exist, this function
+		 * returns false. If the asset lives past this call, it returns true.
+		 *
+		 * @tparam T Required due to delete restrictions.
+		 */
+		template<typename T>
+		bool unload(void* pPointer) {
+			if(!m_RefsByPtr.contains(pPointer)) return false;
+			auto ref = m_RefsByPtr[pPointer];
+
+			if(--ref->refs <= 0) {
+				delete reinterpret_cast<T*>(ref->ptr);
+				delete ref;
+				return false;
+			} else {
+				return true;
+			}
 		}
 	};
 

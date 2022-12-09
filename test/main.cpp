@@ -5,7 +5,6 @@
 
 class MainApplication : public aurora::Application {
 private:
-	aurora::Asset<aurora::aether::Shader> m_AetherShader;
 	aurora::Shader *m_Shader;
 	aurora::Buffer *m_VertexBuffer, *m_IndexBuffer;
 	aurora::DrawObject *m_DrawObject;
@@ -15,8 +14,7 @@ private:
 	};
 
 public:
-	MainApplication() : m_AetherShader(getInstance()->getAssetLoader()->get<aurora::aether::Shader>("test:test.shader")),
-	                    m_Shader(new aurora::Shader(*m_AetherShader.value())),
+	MainApplication() : m_Shader(getInstance()->getAssetLoader()->load<aurora::Shader>("test:test.shader")),
 	                    m_VertexBuffer(new aurora::Buffer(aurora::VertexBuffer)),
 						m_IndexBuffer(new aurora::Buffer(aurora::IndexBuffer)) {
 		float vertexBuf[] = {
@@ -46,8 +44,7 @@ public:
 		delete m_DrawObject;
 		delete m_VertexBuffer;
 		delete m_IndexBuffer;
-		delete m_Shader;
-		m_AetherShader.unload();
+		getInstance()->getAssetLoader()->unload<aurora::Shader>(m_Shader);
 	}
 
 	void render() override {

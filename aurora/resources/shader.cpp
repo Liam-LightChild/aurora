@@ -14,7 +14,6 @@ namespace aurora {
 		global->getImpl()->destroyShader(m_Reference);
 	}
 
-	void Shader::use() {
-
-	}
+	Shader::Shader(AssetLoader *pLoader, const std::filesystem::path &pPath, const std::string &pAssetId)
+		: Shader(*pLoader->load<aether::Shader>(pAssetId)) {}
 }// namespace aurora

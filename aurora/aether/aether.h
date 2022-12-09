@@ -107,7 +107,8 @@ namespace aurora::aether {
 	public:
 		static inline Shader load(const std::filesystem::path &pPath) { return Shader(readFromFile(pPath)); }
 
-		explicit Shader(const std::filesystem::path &pPath) : Shader(readFromFile(pPath)) {}
+		explicit Shader(class AssetLoader*, const std::filesystem::path &pPath, const std::string&)
+			: Shader(readFromFile(pPath)) {}
 
 		nlohmann::json serialize() override {
 			nlohmann::json j = Resource::serialize();

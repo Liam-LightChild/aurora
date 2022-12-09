@@ -5,6 +5,7 @@
 #ifndef AURORA_SHADER_H
 #define AURORA_SHADER_H
 
+#include "aurora/asset_loader.h"
 #include "aurora/aether/aether.h"
 #include "aurora/graphics/obj_ref_base.h"
 #include <filesystem>

@@ -26,6 +26,10 @@ namespace aurora {
 		void setFilters(TextureMinFilter pMin, TextureMagFilter pMag);
 		void update(const sail::image &pImage, bool pUpdateMipmaps = false);
 		void updateMipmaps();
+
+		ObjRefBase *getReference() const {
+			return m_Reference;
+		}
 	};
 
 } // aurora

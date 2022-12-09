@@ -25,6 +25,14 @@ namespace aurora {
 			~Reference() override = default;
 		};
 
+		class ShaderReference : public Reference {
+		public:
+			std::unordered_map<std::string, ShaderUniformType> uniforms;
+
+			explicit ShaderReference(uint32_t pResource) : Reference(pResource) {}
+			~ShaderReference() override = default;
+		};
+
 		class BufferReference : public Reference {
 		public:
 			BufferType type;
@@ -35,13 +43,13 @@ namespace aurora {
 
 		class DrawObjectReference : public Reference {
 		public:
-			Reference *shader;
+			ShaderReference *shader;
 			uint32_t vertexCount;
 			IndexBufferItemType indexBufferItemType;
 
 			DrawObjectReference(uint32_t pResource, const DrawObjectOptions &pOptions)
 				: Reference(pResource),
-				  shader(dynamic_cast<Reference *>(pOptions.shader)),
+				  shader(dynamic_cast<ShaderReference *>(pOptions.shader)),
 				  vertexCount(pOptions.vertexCount),
 				  indexBufferItemType(pOptions.indexBufferItemType) {}
 

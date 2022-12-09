@@ -46,6 +46,9 @@ namespace aurora {
 		auto texPath = absPath.parent_path() / meta.path;
 		img.load(absolute(texPath).string());
 
-		update(img, true);
+		if(meta.wrap == TextureWrapType::BorderColor) setWrap(meta.wrap, meta.borderColor);
+		else setWrap(meta.wrap);
+		setFilters(meta.minFilter, meta.magFilter);
+		update(img, meta.useMipmap);
 	}
 } // aurora

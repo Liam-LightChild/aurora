@@ -1,3 +1,9 @@
 {
-  "@id": "test:test.texture"
+  "@id": "test:test.texture",
+  "mipmap": true,
+  "wrap": "repeat",
+  "filter": {
+    "min": "linear",
+    "mag": "linear"
+  }
 }

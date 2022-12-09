@@ -3,7 +3,7 @@
 //
 
 #include "texture_2d.h"
-#include "aurora/global.h"
+#include "../global.h"
 
 namespace aurora {
 	Texture2D::Texture2D(ObjRefBase *pReference) : m_Reference(pReference) {}

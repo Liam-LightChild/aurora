@@ -8,7 +8,7 @@
 #ifndef AURORA_OPENGL_IMPL_NODE_H
 #define AURORA_OPENGL_IMPL_NODE_H
 
-#include "aurora/graphics/implementation.h"
+#include "../"graphics/implementation.h"
 #include "opengl_impl.h"
 
 namespace aurora {

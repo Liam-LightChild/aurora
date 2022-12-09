@@ -3,7 +3,7 @@
 //
 
 #include "application.h"
-#include "aurora/glimpl/opengl_impl_node.h"
+#include "glimpl/opengl_impl_node.h"
 #include "global.h"
 #include <thread>
 

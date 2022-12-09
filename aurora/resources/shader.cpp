@@ -3,7 +3,7 @@
 //
 
 #include "shader.h"
-#include "aurora/global.h"
+#include "../global.h"
 
 namespace aurora {
 	Shader::Shader(const aether::Shader &pShader) {

@@ -3,7 +3,7 @@
 //
 
 #include "draw_object.h"
-#include "aurora/global.h"
+#include "../global.h"
 
 namespace aurora {
 	DrawObject::DrawObject(ObjRefBase *pReference) : m_Reference(pReference) {}

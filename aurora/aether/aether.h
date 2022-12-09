@@ -7,7 +7,6 @@
 #include <string>
 #include <utility>
 #include <glm/glm.hpp>
-//#include "aurora/graphics/implementation.h"
 
 namespace aurora::aether {
 	struct Resource {

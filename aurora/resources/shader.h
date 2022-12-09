@@ -5,9 +5,9 @@
 #ifndef AURORA_SHADER_H
 #define AURORA_SHADER_H
 
-#include "aurora/asset_loader.h"
-#include "aurora/aether/aether.h"
-#include "aurora/graphics/obj_ref_base.h"
+#include "../asset_loader.h"
+#include "../aether/aether.h"
+#include "../graphics/obj_ref_base.h"
 #include <filesystem>
 #include <string>
 
@@ -17,12 +17,11 @@ namespace aurora {
 	private:
 		ObjRefBase *m_Reference;
 	public:
+		Shader(AssetLoader *pLoader, const std::filesystem::path &pPath, const std::string &pAssetId);
 		explicit Shader(const aether::Shader &pShader);
 		virtual ~Shader();
 
-		void use();
-
-		ObjRefBase *getReference() const {
+		[[nodiscard]] ObjRefBase *getReference() const {
 			return m_Reference;
 		}
 	};

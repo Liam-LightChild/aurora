@@ -7,7 +7,7 @@
 #ifndef AURORA_OPENGL_IMPL_H
 #define AURORA_OPENGL_IMPL_H
 
-#include "aurora/graphics/implementation.h"
+#include "../graphics/implementation.h"
 
 namespace aurora {
 

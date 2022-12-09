@@ -5,8 +5,8 @@
 #ifndef AURORA_IMPLEMENTATION_H
 #define AURORA_IMPLEMENTATION_H
 
-#include "aurora/aether/aether.h"
-#include "aurora/window.h"
+#include "../aether/aether.h"
+#include "../window.h"
 #include "obj_ref_base.h"
 #include <memory>
 #include <glm/glm.hpp>

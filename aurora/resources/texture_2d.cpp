@@ -38,4 +38,14 @@ namespace aurora {
 	void Texture2D::updateMipmaps() {
 		global->getImpl()->updateTexture2DMipmap(m_Reference);
 	}
+
+	Texture2D::Texture2D(AssetLoader*, const std::filesystem::path &pPath, const std::string&) : Texture2D() {
+		sail::image img;
+		auto absPath = absolute(pPath);
+		auto meta = aether::TextureMeta(nlohmann::json::from_cbor(std::ifstream(absPath)));
+		auto texPath = absPath.parent_path() / meta.path;
+		img.load(absolute(texPath).string());
+
+		update(img, true);
+	}
 } // aurora

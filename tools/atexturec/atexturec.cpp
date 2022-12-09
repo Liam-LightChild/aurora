@@ -30,15 +30,19 @@ int main(int pArgCount, char **pArgs) {
 	auto texturePath = vm["texture-path"].as<std::string>();
 
 	auto outPath = std::filesystem::path(outputPath);
+	auto texPath = std::filesystem::path(texturePath);
+
 	if(!std::filesystem::exists(outPath.parent_path())) {
 		std::filesystem::create_directories(outPath.parent_path());
 	}
+
+	auto relPath = relative(texPath, outPath.parent_path());
 
 	std::ifstream in(inputPath);
 	std::ofstream out(outputPath);
 
 	auto parse = nlohmann::json::parse(in);
-	parse["path"] = texturePath;
+	parse["path"] = relPath.string();
 	aurora::aether::TextureMeta meta(parse);
 	nlohmann::json::to_cbor(meta.serialize(), out);
 }

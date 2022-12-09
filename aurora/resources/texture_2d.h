@@ -7,6 +7,7 @@
 
 #include "../graphics/obj_ref_base.h"
 #include "../graphics/implementation.h"
+#include "../asset_loader.h"
 
 namespace aurora {
 
@@ -17,6 +18,7 @@ namespace aurora {
 	public:
 		explicit Texture2D(ObjRefBase *pReference);
 		Texture2D();
+		Texture2D(AssetLoader* pAssetLoader, const std::filesystem::path &pPath, const std::string &pAssetId);
 		virtual ~Texture2D();
 
 		void setWrap(TextureWrapType pWrap);

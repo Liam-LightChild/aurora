@@ -238,16 +238,16 @@ namespace aurora {
 		auto ref = dynamic_cast<Reference*>(pObject);
 		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
 
-		auto img = pImage.convert_to(SAIL_PIXEL_FORMAT_BPP64_RGBA);
+		auto img = pImage.convert_to(SAIL_PIXEL_FORMAT_BPP32_RGBA);
 		glBindTexture(GL_TEXTURE_2D, ref->resource);
 		glTexImage2D(GL_TEXTURE_2D,
 					 0,
-					 GL_RGBA32F,
+					 GL_RGBA8,
 					 static_cast<GLsizei>(img.width()),
 					 static_cast<GLsizei>(img.height()),
 					 0,
 					 GL_RGBA,
-					 GL_UNSIGNED_SHORT,
+					 GL_UNSIGNED_BYTE,
 					 img.pixels());
 	}
 

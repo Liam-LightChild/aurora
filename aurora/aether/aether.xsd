@@ -1,0 +1,8 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="https://www.liamcoalstudio.com/aurora/aether.xsd"
+        attributeFormDefault="qualified"
+        elementFormDefault="qualified">
+    <attributeGroup name="resource">
+        <attribute name="id" type="string" use="required"/>
+    </attributeGroup>
+</schema>

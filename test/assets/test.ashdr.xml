@@ -1,0 +1,37 @@
+<sh:shader xmlns:sh="https://www.liamcoalstudio.com/aurora/ashdr.xsd"
+           xmlns:aether="https://www.liamcoalstudio.com/aurora/aether.xsd"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://www.liamcoalstudio.com/aurora/ashdr.xsd ../../aurora/aether/ashdr.xsd
+                            https://www.liamcoalstudio.com/aurora/aether.xsd ../../aurora/aether/aether.xsd"
+           aether:id="test:test.shader">
+    <sh:vertex>
+        <sh:input sh:name="v_position" sh:from="position3"/>
+        <sh:input sh:name="v_color" sh:from="color3_rgb"/>
+
+        <sh:glsl><![CDATA[
+            in vec3 v_position;
+            in vec3 v_color;
+
+            out vec3 f_color;
+
+            void main() {
+                gl_Position = vec4(v_position, 1);
+                f_color = v_color;
+            }
+            ]]></sh:glsl>
+    </sh:vertex>
+
+    <sh:pixel>
+        <sh:output sh:name="out_color" sh:to="0"/>
+
+        <sh:glsl><![CDATA[
+            in vec3 f_color;
+
+            out vec4 out_color;
+
+            void main() {
+                out_color = vec4(f_color, 1);
+            }
+            ]]></sh:glsl>
+    </sh:pixel>
+</sh:shader>

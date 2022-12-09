@@ -1,0 +1,66 @@
+<schema xmlns:aether="https://www.liamcoalstudio.com/aurora/aether.xsd"
+        xmlns:sh="https://www.liamcoalstudio.com/aurora/ashdr.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="https://www.liamcoalstudio.com/aurora/ashdr.xsd"
+        attributeFormDefault="qualified"
+        elementFormDefault="qualified"
+        xsi:schemaLocation="https://www.liamcoalstudio.com/aurora/ashdr.xsd ashdr.xsd">
+    <import namespace="https://www.liamcoalstudio.com/aurora/aether.xsd" schemaLocation="aether.xsd" id="aether"/>
+
+    <simpleType name="shader_input">
+        <restriction base="string">
+            <enumeration value="position2"/>
+            <enumeration value="position3"/>
+            <enumeration value="color3_rgb"/>
+            <enumeration value="color4_rgba"/>
+        </restriction>
+    </simpleType>
+
+    <element name="shader">
+        <complexType>
+            <all>
+                <element name="vertex">
+                    <complexType mixed="true">
+                        <sequence>
+                            <element name="input" maxOccurs="unbounded">
+                                <complexType>
+                                    <attribute name="name" type="string" use="required"/>
+                                    <attribute name="from" type="sh:shader_input" use="required"/>
+                                </complexType>
+                            </element>
+                            <element name="uniform" maxOccurs="unbounded" minOccurs="0">
+                                <complexType>
+                                    <attribute name="name" type="string" use="required"/>
+                                    <attribute name="from" type="string" use="required"/>
+                                </complexType>
+                            </element>
+                            <element name="glsl" type="string"/>
+                        </sequence>
+                    </complexType>
+                </element>
+
+                <element name="pixel">
+                    <complexType mixed="true">
+                        <sequence>
+                            <element name="output">
+                                <complexType>
+                                    <attribute name="name" type="string" use="required"/>
+                                    <attribute name="to" type="int" use="required"/>
+                                </complexType>
+                            </element>
+                            <element name="uniform" maxOccurs="unbounded" minOccurs="0">
+                                <complexType>
+                                    <attribute name="name" type="string" use="required"/>
+                                    <attribute name="from" type="string" use="required"/>
+                                </complexType>
+                            </element>
+                            <element name="glsl" type="string"/>
+                        </sequence>
+                    </complexType>
+                </element>
+            </all>
+            <attributeGroup ref="aether:resource"/>
+        </complexType>
+    </element>
+</schema>

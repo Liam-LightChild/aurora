@@ -21,7 +21,7 @@ namespace aurora {
 	}
 
 	void Texture2D::setWrap(TextureWrapType pWrap, glm::vec3 pColor) {
-		if(pWrap != BorderColor) setWrap(pWrap);
+		if(pWrap != TextureWrapType::BorderColor) setWrap(pWrap);
 		else global->getImpl()->setTexture2DWrapPropertyBorder(m_Reference, pColor);
 	}
 

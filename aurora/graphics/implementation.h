@@ -8,80 +8,18 @@
 #include "../aether/aether.h"
 #include "../window.h"
 #include "obj_ref_base.h"
+#include "enums.h"
 #include <memory>
 #include <glm/glm.hpp>
 #include <utility>
 #include <sail-c++/sail-c++.h>
 
 namespace aurora {
-	enum BufferType {
-		VertexBuffer,
-		IndexBuffer,
-	};
 
 	struct ClearOptions {
 		bool color: 1 = true;
 		bool depth: 1 = true;
 		bool stencil: 1 = false;
-	};
-
-	enum class TextureWrapType {
-		Repeat,
-		ClampToEdge,
-		BorderColor,
-	};
-
-	enum class TextureMinFilter {
-		Nearest,
-		Linear,
-		NearestMipmap,
-		LinearMipmap
-	};
-
-	enum class TextureMagFilter {
-		Nearest,
-		Linear
-	};
-
-	enum class VertexInputType {
-		Float,
-		Int,
-		Boolean,
-	};
-
-	enum class ShaderUniformType {
-		Texture0,
-		Texture1,
-		Texture2,
-		Texture3,
-		Texture4,
-		Texture5,
-		Texture6,
-		Texture7,
-		Texture8,
-		Texture9,
-		Texture10,
-		Texture11,
-		Texture12,
-		Texture13,
-		Texture14,
-		Texture15,
-		Texture16,
-		Texture17,
-		Texture18,
-		Texture19,
-		Texture20,
-		Texture21,
-		Texture22,
-		Texture23,
-		Texture24,
-		Texture25,
-		Texture26,
-		Texture27,
-		Texture28,
-		Texture29,
-		Texture30,
-		Texture31,
 	};
 
 	struct VertexArrangement {
@@ -104,12 +42,6 @@ namespace aurora {
 
 		[[nodiscard]] auto begin() const { return m_Nodes.begin(); }
 		[[nodiscard]] auto end() const { return m_Nodes.end(); }
-	};
-
-	enum class IndexBufferItemType {
-		UnsignedInt,
-		UnsignedShort,
-		UnsignedByte,
 	};
 
 	struct DrawObjectOptions {

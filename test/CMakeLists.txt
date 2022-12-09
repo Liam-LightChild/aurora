@@ -2,4 +2,4 @@ project(test)
 
 include(../aurora.cmake)
 
-a_add_executable(test main.cpp assets/test.ashdr.xml)
+a_add_executable(test main.cpp assets/test.ashdr.xml assets/test.jpg)

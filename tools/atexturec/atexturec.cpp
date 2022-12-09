@@ -32,7 +32,7 @@ int main(int pArgCount, char **pArgs) {
 	auto outPath = std::filesystem::path(outputPath);
 	auto texPath = std::filesystem::path(texturePath);
 
-	if(!std::filesystem::exists(outPath.parent_path())) {
+	if(outPath.has_parent_path() && !std::filesystem::exists(outPath.parent_path())) {
 		std::filesystem::create_directories(outPath.parent_path());
 	}
 

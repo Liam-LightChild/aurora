@@ -134,9 +134,11 @@ int main(int pArgCount, char **pArgs) {
 
 	auto data = nlohmann::json::to_cbor(sh.serialize());
 	auto outPath = std::filesystem::path(outputPath);
-	if(!std::filesystem::exists(outPath.parent_path())) {
+
+	if(outPath.has_parent_path() && !std::filesystem::exists(outPath.parent_path())) {
 		std::filesystem::create_directories(outPath.parent_path());
 	}
+
 	auto out = std::ofstream(outPath);
 	out.write(reinterpret_cast<const char *>(data.data()), static_cast<std::streamsize>(data.size()));
 

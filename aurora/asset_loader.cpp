@@ -8,6 +8,8 @@
 
 namespace aurora {
 	AssetLoader::AssetLoader(const std::filesystem::path &pPath) {
+		if(!std::filesystem::exists(pPath / "assets.idx.aet"))
+			throw std::runtime_error("no assets index present in " + std::filesystem::absolute(pPath).string());
 		std::ifstream indexIn(pPath / "assets.idx.aet");
 		auto indexJson = nlohmann::json::from_cbor(indexIn);
 

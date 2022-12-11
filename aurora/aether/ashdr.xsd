@@ -6,7 +6,7 @@
         attributeFormDefault="qualified"
         elementFormDefault="qualified"
         xsi:schemaLocation="https://www.liamcoalstudio.com/aurora/ashdr.xsd ashdr.xsd">
-    <import namespace="https://www.liamcoalstudio.com/aurora/aether.xsd" schemaLocation="aether.xsd" id="aether"/>
+    <import namespace="https://www.liamcoalstudio.com/aurora/aether.xsd" schemaLocation="aether.xsd"/>
 
     <simpleType name="shader_input">
         <restriction base="string">

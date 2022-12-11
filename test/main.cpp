@@ -1,5 +1,12 @@
 #include "aurora/application.h"
 #include "aurora/resources.h"
+#include <boost/log/trivial.hpp>
+
+struct vertex {
+	glm::vec3 position;
+	glm::vec3 color;
+	glm::vec2 textureCoords;
+};
 
 class MainApplication : public aurora::Application {
 private:
@@ -18,11 +25,11 @@ public:
 	                    m_VertexBuffer(new aurora::Buffer(aurora::VertexBuffer)),
 						m_IndexBuffer(new aurora::Buffer(aurora::IndexBuffer)),
 						m_Texture(getInstance()->getAssetLoader()->load<aurora::Texture2D>("test:test.texture")){
-		float vertexBuf[] = {
-			0, 0, 0, 1, 0, 0, 0, 1,
-			0, 1, 0, 0, 1, 0, 0, 0,
-			1, 0, 0, 0, 0, 1, 1, 1,
-			1, 1, 0, 1, 1, 1, 1, 0,
+		vertex vertices[] = {
+			{{0, 0, 0}, {1, 0, 0}, {0, 1}},
+			{{0, 1, 0}, {0, 1, 0}, {0, 0}},
+			{{1, 0, 0}, {0, 0, 1}, {1, 1}},
+			{{1, 1, 0}, {1, 1, 1}, {1, 0}}
 		};
 
 		uint32_t indexBuf[] = {
@@ -30,7 +37,7 @@ public:
 			1, 3, 2
 		};
 
-		m_VertexBuffer->update(vertexBuf, sizeof(vertexBuf));
+		m_VertexBuffer->update(vertices, sizeof(vertices));
 		m_IndexBuffer->update(indexBuf, sizeof(indexBuf));
 
 		aurora::DrawObjectOptions options;
@@ -66,7 +73,17 @@ public:
 };
 
 int main() {
-	auto a = new MainApplication;
-	a->run();
-	delete a;
+	MainApplication* a = nullptr;
+	try {
+		a = new MainApplication;
+		a->run();
+		delete a;
+	} catch(const std::exception &e) {
+		delete a;
+		BOOST_LOG_TRIVIAL(error) << "Exception encountered";
+		BOOST_LOG_TRIVIAL(error) << typeid(e).name() << ": " << e.what();
+	} catch(...) {
+		delete a;
+		std::rethrow_exception(std::current_exception());
+	}
 }

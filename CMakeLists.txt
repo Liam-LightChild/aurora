@@ -25,6 +25,4 @@ add_library(aurora STATIC aurora/instance.cpp aurora/instance.h aurora/asset_loa
 target_link_libraries(aurora PUBLIC glfw GLEW::GLEW aether Boost::headers Boost::log Boost::program_options glm::glm SAIL::sail-c++)
 target_include_directories(aurora PUBLIC .)
 
-add_dependencies(aurora ashaderc)
-
 add_subdirectory(test)

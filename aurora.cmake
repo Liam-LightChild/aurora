@@ -27,12 +27,9 @@ function(a_add_executable name)
             add_custom_target("${fdir_u}${fname}${fext}.aet"
                     COMMAND atexturec -i "${fabs}.aet.meta" -o "${fdir}${fname}${fext}.aet" -t "${fdir}${fname}${fext}"
                     SOURCES ${file}.aet.meta)
-            add_custom_target("${fdir_u}${fname}${fext}"
-                    COMMAND cp ${fabs} "${fdir}${fname}${fext}"
-                    SOURCES ${file}
-                    DEPENDS "${fdir_u}${fname}${fext}.aet")
-            list(APPEND ASSET_DEPENDENCIES "${fdir_u}${fname}${fext}" "${fdir_u}${fname}${fext}.aet")
-            list(APPEND ASSET_PATHS_RELATIVE "${fdir}${fname}${fext}" "${fdir}${fname}${fext}.aet")
+            file(COPY "${fabs}" DESTINATION "${fdir}")
+            list(APPEND ASSET_DEPENDENCIES "${fdir_u}${fname}${fext}.aet")
+            list(APPEND ASSET_PATHS_RELATIVE "${fdir}${fname}${fext}.aet")
         else ()
             list(APPEND SOURCE ${file})
         endif ()

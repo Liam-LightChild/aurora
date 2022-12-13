@@ -110,6 +110,7 @@ namespace aurora {
 		virtual void setTexture2DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) = 0;
 		virtual void setTexture2DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
 		virtual void updateTexture2DData(ObjRefBase *pObject, const sail::image &pImage) = 0;
+		virtual void updateTexture2DData(ObjRefBase *pObject, int pWidth, int pHeight, const uint8_t *pDataRgba) = 0;
 		virtual void updateTexture2DMipmap(ObjRefBase *pObject) = 0;
 
 		virtual ObjRefBase *createTexture3D() = 0;

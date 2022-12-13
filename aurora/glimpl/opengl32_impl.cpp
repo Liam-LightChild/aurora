@@ -593,4 +593,21 @@ namespace aurora {
 		glBindTexture(GL_TEXTURE_3D, ref->resource);
 		glGenerateMipmap(GL_TEXTURE_3D);
 	}
+
+	void OpenGLImplementation<3, 2>::updateTexture2DData(ObjRefBase *pObject, int pWidth, int pHeight,
+	                                                     const uint8_t *pDataRgba) {
+		auto ref = dynamic_cast<Reference*>(pObject);
+		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
+
+		glBindTexture(GL_TEXTURE_2D, ref->resource);
+		glTexImage2D(GL_TEXTURE_2D,
+		             0,
+		             GL_RGBA8,
+		             static_cast<GLsizei>(pWidth),
+		             static_cast<GLsizei>(pHeight),
+		             0,
+		             GL_RGBA,
+		             GL_UNSIGNED_BYTE,
+		             pDataRgba);
+	}
 }

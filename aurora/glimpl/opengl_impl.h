@@ -96,6 +96,7 @@ namespace aurora {
 		void setTexture3DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) override;
 		void updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth, const uint8_t *pDataRgba) override;
 		void updateTexture3DMipmap(ObjRefBase *pObject) override;
+		void updateTexture2DData(ObjRefBase *pObject, int pWidth, int pHeight, const uint8_t *pDataRgba) override;
 	};
 
 	template<>

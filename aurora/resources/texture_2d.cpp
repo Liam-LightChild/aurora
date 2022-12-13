@@ -51,4 +51,10 @@ namespace aurora {
 		setFilters(meta.minFilter, meta.magFilter);
 		update(img, meta.useMipmap);
 	}
+
+	void Texture2D::update(int pWidth, int pHeight, const uint8_t *pDataRgba, bool pUpdateMipmaps) {
+		auto i = global->getImpl();
+		i->updateTexture2DData(m_Reference, pWidth, pHeight, pDataRgba);
+		if(pUpdateMipmaps) i->updateTexture2DMipmap(m_Reference);
+	}
 } // aurora

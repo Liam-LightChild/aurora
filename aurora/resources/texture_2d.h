@@ -25,6 +25,7 @@ namespace aurora {
 		void setWrap(TextureWrapType pWrap, glm::vec3 pColor);
 		void setFilters(TextureMinFilter pMin, TextureMagFilter pMag);
 		void update(const sail::image &pImage, bool pUpdateMipmaps = false);
+		void update(int pWidth, int pHeight, const uint8_t *pDataRgba, bool pUpdateMipmaps = false);
 		void updateMipmaps();
 
 		ObjRefBase *getReference() const {

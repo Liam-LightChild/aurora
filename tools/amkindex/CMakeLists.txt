@@ -3,3 +3,5 @@ project(aurora)
 
 add_executable(amkindex amkindex.cpp)
 target_link_libraries(amkindex PRIVATE aether Boost::headers Boost::program_options)
+
+install(TARGETS amkindex CONFIGURATIONS Release RUNTIME)

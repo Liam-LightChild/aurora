@@ -29,4 +29,11 @@ add_library(aurora STATIC aurora/instance.cpp aurora/instance.h aurora/asset_loa
 target_link_libraries(aurora PUBLIC glfw GLEW::GLEW aether Boost::headers Boost::log Boost::program_options glm::glm SAIL::sail-c++)
 target_include_directories(aurora PUBLIC .)
 
+install(TARGETS aurora CONFIGURATIONS Release ARCHIVE)
+install(DIRECTORY aurora CONFIGURATIONS Release TYPE INCLUDE FILES_MATCHING PATTERN *.h)
+
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    install(FILES aurora.cmake DESTINATION share/cmake/modules)
+endif()
+
 add_subdirectory(test)

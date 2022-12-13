@@ -58,7 +58,7 @@ namespace aurora {
 			if(!m_RefsByPtr.contains(pPointer)) return false;
 			auto ref = m_RefsByPtr[pPointer];
 
-			if(--ref->refs <= 0) {
+			if(ref->refs != -1 && --ref->refs <= 0) {
 				delete reinterpret_cast<T*>(ref->ptr);
 				delete ref;
 				return false;
@@ -66,7 +66,20 @@ namespace aurora {
 				return true;
 			}
 		}
+
+		template<typename T>
+		void inject(const std::string &pAssetId, T* pPointer) {
+			auto r = new Ref {
+				.ptr = pPointer,
+				.refs = -1
+			};
+
+			m_Refs[pAssetId] = r;
+			m_RefsByPtr[pPointer] = r;
+		}
 	};
+
+	void injectBuiltinAssets(AssetLoader *pLoader);
 
 }// namespace aurora
 

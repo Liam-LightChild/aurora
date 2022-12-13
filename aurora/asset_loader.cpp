@@ -5,6 +5,8 @@
 #include "asset_loader.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <aurora/resources.h>
+#include <aurora/shaders/shaders.h>
 
 namespace aurora {
 	AssetLoader::AssetLoader(const std::filesystem::path &pPath) {
@@ -16,5 +18,9 @@ namespace aurora {
 		for(const auto &item: indexJson.items()) {
 			m_Index[item.key()] = (std::string) item.value();
 		}
+	}
+
+	void injectBuiltinAssets(AssetLoader *pLoader) {
+		pLoader->inject("aurora:test.shader", new Shader(shaders::test));
 	}
 }// namespace aurora

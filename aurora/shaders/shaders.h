@@ -3,6 +3,7 @@
 
 
 #include "../aether/aether.h"
+#include "../graphics/implementation.h"
 
 /*
  * This file defines the variables in which the built-in shaders are stored.
@@ -11,6 +12,8 @@
 
 namespace aurora::shaders {
 	extern const aether::Shader test;
+
+	extern const VertexArrangement testA;
 }
 
 #endif //AURORA_SHADERS_H

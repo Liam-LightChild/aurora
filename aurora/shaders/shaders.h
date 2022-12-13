@@ -12,8 +12,13 @@
 
 namespace aurora::shaders {
 	extern const aether::Shader test;
-
 	extern const VertexArrangement testA;
+
+	struct TestVertex {
+		glm::vec3 position;
+		glm::vec3 color;
+		glm::vec2 textureCoords;
+	};
 }
 
 #endif //AURORA_SHADERS_H

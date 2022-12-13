@@ -1,12 +1,8 @@
 #include "aurora/application.h"
 #include "aurora/resources.h"
+#include "aurora/shaders/shaders.h"
 #include <boost/log/trivial.hpp>
 
-struct vertex {
-	glm::vec3 position;
-	glm::vec3 color;
-	glm::vec2 textureCoords;
-};
 
 class MainApplication : public aurora::Application {
 private:
@@ -27,7 +23,7 @@ public:
 		aurora::injectBuiltinAssets(getInstance()->getAssetLoader());
 		m_Shader = getInstance()->getAssetLoader()->load<aurora::Shader>("aurora:test.shader");
 
-		vertex vertices[] = {
+		aurora::shaders::TestVertex vertices[] = {
 			{{0, 0, 0}, {1, 0, 0}, {0, 1}},
 			{{0, 1, 0}, {0, 1, 0}, {0, 0}},
 			{{1, 0, 0}, {0, 0, 1}, {1, 1}},

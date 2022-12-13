@@ -17,12 +17,10 @@ private:
 	};
 
 public:
-	MainApplication() : m_VertexBuffer(new aurora::Buffer(aurora::VertexBuffer)),
+	MainApplication() : m_Shader(getInstance()->getAssetLoader()->load<aurora::Shader>("aurora:test.shader")),
+						m_VertexBuffer(new aurora::Buffer(aurora::VertexBuffer)),
 						m_IndexBuffer(new aurora::Buffer(aurora::IndexBuffer)),
 						m_Texture(getInstance()->getAssetLoader()->load<aurora::Texture2D>("test:test.texture")) {
-		aurora::injectBuiltinAssets(getInstance()->getAssetLoader());
-		m_Shader = getInstance()->getAssetLoader()->load<aurora::Shader>("aurora:test.shader");
-
 		aurora::shaders::TestVertex vertices[] = {
 			{{0, 0, 0}, {1, 0, 0}, {0, 1}},
 			{{0, 1, 0}, {0, 1, 0}, {0, 0}},

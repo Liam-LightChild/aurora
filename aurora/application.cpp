@@ -17,6 +17,7 @@ namespace aurora {
 		aurora::global = m_Instance;
 
 		m_Window = new aurora::Window(800, 600, "Title", false);
+		aurora::injectBuiltinAssets(m_Instance->getAssetLoader());
 	}
 
 	Application::~Application() {

@@ -21,7 +21,11 @@ target_link_libraries(aether PUBLIC glm::glm nlohmann_json::nlohmann_json)
 
 add_subdirectory(tools)
 
-add_library(aurora STATIC aurora/instance.cpp aurora/instance.h aurora/asset_loader.cpp aurora/asset_loader.h aurora/glimpl/opengl_impl.h aurora/graphics/implementation.cpp aurora/graphics/implementation.h aurora/graphics/implementation_finder.cpp aurora/graphics/implementation_finder.h aurora/glimpl/opengl_impl_node.cpp aurora/glimpl/opengl_impl_node.h aurora/glimpl/opengl_impl_node.cpp aurora/glimpl/opengl32_impl.cpp aurora/global.cpp aurora/global.h aurora/graphics/graphics.h aurora/graphics/obj_ref_base.cpp aurora/graphics/obj_ref_base.h aurora/resources/shader.cpp aurora/resources/shader.h aurora/window.cpp aurora/window.h aurora/resources.h aurora/application.cpp aurora/application.h aurora/resources/buffer.cpp aurora/resources/buffer.h aurora/resources/texture_2d.cpp aurora/resources/texture_2d.h aurora/resources/draw_object.cpp aurora/resources/draw_object.h)
+set(GEN_SOURCES)
+
+include(aurora/shaders/shaders.cmake)
+
+add_library(aurora STATIC aurora/instance.cpp aurora/instance.h aurora/asset_loader.cpp aurora/asset_loader.h aurora/glimpl/opengl_impl.h aurora/graphics/implementation.cpp aurora/graphics/implementation.h aurora/graphics/implementation_finder.cpp aurora/graphics/implementation_finder.h aurora/glimpl/opengl_impl_node.cpp aurora/glimpl/opengl_impl_node.h aurora/glimpl/opengl_impl_node.cpp aurora/glimpl/opengl32_impl.cpp aurora/global.cpp aurora/global.h aurora/graphics/graphics.h aurora/graphics/obj_ref_base.cpp aurora/graphics/obj_ref_base.h aurora/resources/shader.cpp aurora/resources/shader.h aurora/window.cpp aurora/window.h aurora/resources.h aurora/application.cpp aurora/application.h aurora/resources/buffer.cpp aurora/resources/buffer.h aurora/resources/texture_2d.cpp aurora/resources/texture_2d.h aurora/resources/draw_object.cpp aurora/resources/draw_object.h aurora/shaders/shaders.h ${GEN_SOURCES})
 target_link_libraries(aurora PUBLIC glfw GLEW::GLEW aether Boost::headers Boost::log Boost::program_options glm::glm SAIL::sail-c++)
 target_include_directories(aurora PUBLIC .)
 

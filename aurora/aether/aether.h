@@ -80,7 +80,6 @@ namespace aurora::aether {
 		Shader() = default;
 		~Shader() override = default;
 
-	private:
 		explicit Shader(const nlohmann::json &pJson) : Resource(pJson) {
 			for(const auto &item: pJson["parts"]) {
 				Stage s;
@@ -104,7 +103,6 @@ namespace aurora::aether {
 			}
 		}
 
-	public:
 		static inline Shader load(const std::filesystem::path &pPath) { return Shader(readFromFile(pPath)); }
 
 		explicit Shader(class AssetLoader*, const std::filesystem::path &pPath, const std::string&)

@@ -1,6 +1,7 @@
-//
-// Created by liam on 12/2/22.
-//
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
 
 #ifndef AURORA_IMPLEMENTATION_FINDER_H
 #define AURORA_IMPLEMENTATION_FINDER_H

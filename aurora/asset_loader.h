@@ -1,6 +1,7 @@
-//
-// Created by liam on 12/2/22.
-//
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
 
 #ifndef AURORA_ASSET_LOADER_H
 #define AURORA_ASSET_LOADER_H

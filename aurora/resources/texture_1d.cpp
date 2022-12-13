@@ -1,3 +1,8 @@
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
+
 #include "texture_1d.h"
 #include "../global.h"
 

@@ -1,6 +1,7 @@
-//
-// Created by liam on 12/7/22.
-//
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
 
 #include "buffer.h"
 #include "../global.h"

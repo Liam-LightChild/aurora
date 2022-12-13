@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  - This file is part of Aurora Game Engine.
+  - https://github.com/liam-lightchild/aurora
+  -->
+
 <sh:shader xmlns:sh="https://www.liamcoalstudio.com/aurora/ashdr.xsd"
            xmlns:aether="https://www.liamcoalstudio.com/aurora/aether.xsd"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

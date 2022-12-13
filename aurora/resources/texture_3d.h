@@ -1,6 +1,7 @@
-//
-// Created by liam on 12/12/22.
-//
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
 
 #ifndef AURORA_TEXTURE_3D_H
 #define AURORA_TEXTURE_3D_H

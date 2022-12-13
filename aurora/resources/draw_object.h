@@ -1,6 +1,7 @@
-//
-// Created by liam on 12/7/22.
-//
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
 
 #ifndef AURORA_DRAW_OBJECT_H
 #define AURORA_DRAW_OBJECT_H

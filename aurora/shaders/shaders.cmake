@@ -1,3 +1,6 @@
+# This file is part of Aurora Game Engine.
+# https://github.com/liam-lightchild/aurora
+
 macro(a_build_shader file name)
     get_filename_component(fext "${file}" EXT)
     get_filename_component(fname "${file}" NAME_WE)

@@ -1,3 +1,8 @@
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
+
 #ifndef AURORA_AETHER_H
 #define AURORA_AETHER_H
 

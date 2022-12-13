@@ -1,8 +1,12 @@
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
+
 #include <GL/glew.h>
 #include <sail-c++/sail-c++.h>
 #include "opengl_impl.h"
 #include <GLFW/glfw3.h>
-#include <aurora/aether/aether.h>
 #include <boost/log/trivial.hpp>
 #include <memory>
 

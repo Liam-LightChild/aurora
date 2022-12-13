@@ -28,7 +28,7 @@ public:
 			{{1, 1, 0}, {1, 1, 1}, {1, 0}}
 		};
 
-		uint32_t indexBuf[] = {
+		uint8_t indexBuf[] = {
 			0, 1, 2,
 			1, 3, 2
 		};
@@ -41,7 +41,7 @@ public:
 		options.vertexBuffer = m_VertexBuffer->getReference();
 		options.indexBuffer = m_IndexBuffer->getReference();
 		options.vertexCount = 6;
-		options.indexBufferItemType = aurora::IndexBufferItemType::UnsignedInt;
+		options.indexBufferItemType = aurora::IndexBufferItemType::UnsignedByte;
 		options.arrangement = m_TestShaderArrange;
 		options.textures[0] = m_Texture->getReference();
 

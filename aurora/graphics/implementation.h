@@ -14,6 +14,8 @@
 #include <utility>
 #include <sail-c++/sail-c++.h>
 
+#define A_VERTEX(name, type, count) ::aurora::VertexArrangement::Node(#name, ::aurora::VertexInputType::type, count)
+
 namespace aurora {
 
 	struct ClearOptions {

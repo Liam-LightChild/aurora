@@ -14,10 +14,10 @@ private:
 	aurora::Buffer *m_VertexBuffer, *m_IndexBuffer;
 	aurora::DrawObject *m_DrawObject;
 	aurora::Texture2D *m_Texture;
-	aurora::VertexArrangement m_TestShaderArrange = {
-		{"v_position", aurora::VertexInputType::Float, 3},
-		{"v_color", aurora::VertexInputType::Float, 3},
-		{"v_texCoords", aurora::VertexInputType::Float, 2}
+	aurora::VertexArrangement m_TestShaderArrange {
+		A_VERTEX(v_position, Float, 3),
+		A_VERTEX(v_color, Float, 3),
+		A_VERTEX(v_texCoords, Float, 2)
 	};
 
 public:

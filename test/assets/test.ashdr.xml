@@ -21,7 +21,7 @@
                 f_color = v_color;
                 f_texCoords = v_texCoords;
             }
-            ]]></sh:glsl>
+        ]]></sh:glsl>
     </sh:vertex>
 
     <sh:pixel>
@@ -40,6 +40,6 @@
             void main() {
                 out_color = vec4(f_color, 1) * texture(tex, f_texCoords);
             }
-            ]]></sh:glsl>
+        ]]></sh:glsl>
     </sh:pixel>
 </sh:shader>

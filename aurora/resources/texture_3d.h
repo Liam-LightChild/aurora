@@ -23,7 +23,7 @@ namespace aurora {
 		void setWrap(TextureWrapType pWrap);
 		void setWrap(TextureWrapType pWrap, glm::vec3 pColor);
 		void setFilters(TextureMinFilter pMin, TextureMagFilter pMag);
-		void update(int pWidth, int pHeight, int pDepth, const float *pDataRgba, bool pUpdateMipmaps = false);
+		void update(int pWidth, int pHeight, int pDepth, const uint8_t *pDataRgba, bool pUpdateMipmaps = false);
 		void updateMipmaps();
 
 		[[nodiscard]] ObjRefBase *getReference() const {

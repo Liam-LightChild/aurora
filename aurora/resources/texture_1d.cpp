@@ -25,7 +25,7 @@ namespace aurora {
 		global->getImpl()->setTexture1DFilter(m_Reference, pMin, pMag);
 	}
 
-	void Texture1D::update(int pWidth, const float *pDataRgba, bool pUpdateMipmaps) {
+	void Texture1D::update(int pWidth, const uint8_t *pDataRgba, bool pUpdateMipmaps) {
 		auto i = global->getImpl();
 		i->updateTexture1DData(m_Reference, pWidth, pDataRgba);
 		if(pUpdateMipmaps) i->updateTexture1DMipmap(m_Reference);

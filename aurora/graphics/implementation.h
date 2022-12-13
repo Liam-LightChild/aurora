@@ -101,7 +101,7 @@ namespace aurora {
 		virtual void setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;
 		virtual void setTexture1DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) = 0;
 		virtual void setTexture1DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
-		virtual void updateTexture1DData(ObjRefBase *pObject, int pWidth, const float *pDataRgba) = 0;
+		virtual void updateTexture1DData(ObjRefBase *pObject, int pWidth, const uint8_t *pDataRgba) = 0;
 		virtual void updateTexture1DMipmap(ObjRefBase *pObject) = 0;
 
 		virtual ObjRefBase *createTexture2D() = 0;
@@ -117,7 +117,7 @@ namespace aurora {
 		virtual void setTexture3DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;
 		virtual void setTexture3DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) = 0;
 		virtual void setTexture3DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
-		virtual void updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth, const float *pDataRgba) = 0;
+		virtual void updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth, const uint8_t *pDataRgba) = 0;
 		virtual void updateTexture3DMipmap(ObjRefBase *pObject) = 0;
 
 		virtual ObjRefBase *createDrawObject(const DrawObjectOptions &pOptions) = 0;

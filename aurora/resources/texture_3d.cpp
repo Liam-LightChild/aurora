@@ -29,7 +29,7 @@ namespace aurora {
 		global->getImpl()->setTexture3DFilter(m_Reference, pMin, pMag);
 	}
 
-	void Texture3D::update(int pWidth, int pHeight, int pDepth, const float *pDataRgba, bool pUpdateMipmaps) {
+	void Texture3D::update(int pWidth, int pHeight, int pDepth, const uint8_t *pDataRgba, bool pUpdateMipmaps) {
 		auto i = global->getImpl();
 		i->updateTexture3DData(m_Reference, pWidth, pHeight, pDepth, pDataRgba);
 		if(pUpdateMipmaps) i->updateTexture3DMipmap(m_Reference);

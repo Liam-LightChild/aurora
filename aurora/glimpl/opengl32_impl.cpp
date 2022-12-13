@@ -478,7 +478,7 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, mag);
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture1DData(ObjRefBase *pObject, int pWidth, const float *pDataRgba) {
+	void OpenGLImplementation<3, 2>::updateTexture1DData(ObjRefBase *pObject, int pWidth, const uint8_t *pDataRgba) {
 		auto ref = dynamic_cast<Reference*>(pObject);
 		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
 
@@ -569,7 +569,7 @@ namespace aurora {
 	}
 
 	void OpenGLImplementation<3, 2>::updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth,
-	                                                     const float *pDataRgba) {
+	                                                     const uint8_t *pDataRgba) {
 		auto ref = dynamic_cast<Reference*>(pObject);
 		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
 

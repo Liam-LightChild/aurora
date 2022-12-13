@@ -3,18 +3,12 @@
 #include "aurora/shaders/shaders.h"
 #include <boost/log/trivial.hpp>
 
-
 class MainApplication : public aurora::Application {
 private:
 	aurora::Shader *m_Shader;
 	aurora::Buffer *m_VertexBuffer, *m_IndexBuffer;
 	aurora::DrawObject *m_DrawObject;
 	aurora::Texture2D *m_Texture;
-	aurora::VertexArrangement m_TestShaderArrange {
-		A_VNODE(v_position, Float, 3),
-		A_VNODE(v_color, Float, 3),
-		A_VNODE(v_texCoords, Float, 2)
-	};
 
 public:
 	MainApplication() : m_Shader(getInstance()->getAssetLoader()->load<aurora::Shader>("aurora:test.shader")),
@@ -42,7 +36,7 @@ public:
 		options.indexBuffer = m_IndexBuffer->getReference();
 		options.vertexCount = 6;
 		options.indexBufferItemType = aurora::IndexBufferItemType::UnsignedByte;
-		options.arrangement = m_TestShaderArrange;
+		options.arrangement = aurora::shaders::testA;
 		options.textures[0] = m_Texture->getReference();
 
 		m_DrawObject = new aurora::DrawObject(options);

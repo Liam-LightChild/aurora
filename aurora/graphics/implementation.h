@@ -104,6 +104,14 @@ namespace aurora {
 		virtual void updateTexture2DData(ObjRefBase *pObject, const sail::image &pImage) = 0;
 		virtual void updateTexture2DMipmap(ObjRefBase *pObject) = 0;
 
+		virtual ObjRefBase *createTexture3D() = 0;
+		virtual void destroyTexture3D(ObjRefBase *pObject) = 0;
+		virtual void setTexture3DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;
+		virtual void setTexture3DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) = 0;
+		virtual void setTexture3DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
+		virtual void updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth, const float *pDataRgba) = 0;
+		virtual void updateTexture3DMipmap(ObjRefBase *pObject) = 0;
+
 		virtual ObjRefBase *createDrawObject(const DrawObjectOptions &pOptions) = 0;
 		virtual void destroyDrawObject(ObjRefBase *pObject) = 0;
 		virtual void performDraw(ObjRefBase *pDrawObject) = 0;

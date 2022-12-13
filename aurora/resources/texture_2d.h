@@ -16,6 +16,8 @@ namespace aurora {
 		ObjRefBase *m_Reference;
 
 	public:
+		static const std::string missingAssetName;
+
 		explicit Texture2D(ObjRefBase *pReference);
 		Texture2D();
 		Texture2D(AssetLoader* pAssetLoader, const std::filesystem::path &pPath, const std::string &pAssetId);

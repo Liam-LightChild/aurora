@@ -39,7 +39,9 @@ namespace aurora {
 		global->getImpl()->updateTexture2DMipmap(m_Reference);
 	}
 
-	Texture2D::Texture2D(AssetLoader*, const std::filesystem::path &pPath, const std::string&) : Texture2D() {
+	Texture2D::Texture2D(AssetLoader*, const std::filesystem::path &pPath, const std::string &pAssetId) : Texture2D() {
+		if(!exists(pPath)) throw std::runtime_error("Asset " + pAssetId + ": cannot find " + pPath.string());
+
 		sail::image img;
 		auto absPath = absolute(pPath);
 		auto meta = aether::TextureMeta(nlohmann::json::from_cbor(std::ifstream(absPath)));
@@ -57,4 +59,6 @@ namespace aurora {
 		i->updateTexture2DData(m_Reference, pWidth, pHeight, pDataRgba);
 		if(pUpdateMipmaps) i->updateTexture2DMipmap(m_Reference);
 	}
+
+	const std::string Texture2D::missingAssetName = "aurora:_internal/missing.texture";
 } // aurora

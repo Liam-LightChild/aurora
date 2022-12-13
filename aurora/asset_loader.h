@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <utility>
 #include <optional>
+#include <boost/log/trivial.hpp>
 
 namespace aurora {
 	class AssetLoader {
@@ -43,6 +44,16 @@ namespace aurora {
 				m_RefsByPtr[ptr] = r;
 
 				return ptr;
+			}
+		}
+
+		template<typename T>
+		T *tryLoad(const std::string &pAssetId, const std::string &pDefaultAssetId = T::missingAssetName) {
+			try {
+				return load<T>(pAssetId);
+			} catch (const std::runtime_error &e) {
+				BOOST_LOG_TRIVIAL(error) << "Failed to load asset " << pAssetId << "; defaulting to " << pDefaultAssetId;
+				return load<T>(pDefaultAssetId);
 			}
 		}
 

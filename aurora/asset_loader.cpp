@@ -22,5 +22,17 @@ namespace aurora {
 
 	void injectBuiltinAssets(AssetLoader *pLoader) {
 		pLoader->inject("aurora:test.shader", new Shader(shaders::test));
+
+		auto tex = new Texture2D;
+		uint8_t missingTexture2D[4*4] {
+			255, 0, 255, 255,
+			0, 0, 0, 255,
+			0, 0, 0, 255,
+			255, 0, 255, 255,
+		};
+		tex->setFilters(TextureMinFilter::NearestMipmap, TextureMagFilter::Nearest);
+		tex->setWrap(TextureWrapType::Repeat);
+		tex->update(2, 2, missingTexture2D, true);
+		pLoader->inject(Texture2D::missingAssetName, tex);
 	}
 }// namespace aurora

@@ -58,10 +58,16 @@ namespace aurora {
 		IndexBufferItemType indexBufferItemType = IndexBufferItemType::UnsignedInt;
 		VertexArrangement arrangement;
 
-		ObjRefBase *textures[32] {
+		ObjRefBase *textures[16] {
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		};
+
+		ObjRefBase *textures1D[8] {
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		};
+
+		ObjRefBase *textures3D[8] {
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		};
 	};
@@ -90,6 +96,14 @@ namespace aurora {
 		virtual void updateBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) = 0;
 		virtual void retrieveBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) = 0;
 
+		virtual ObjRefBase *createTexture1D() = 0;
+		virtual void destroyTexture1D(ObjRefBase *pObject) = 0;
+		virtual void setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;
+		virtual void setTexture1DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) = 0;
+		virtual void setTexture1DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
+		virtual void updateTexture1DData(ObjRefBase *pObject, int pWidth, const float *pDataRgba) = 0;
+		virtual void updateTexture1DMipmap(ObjRefBase *pObject) = 0;
+
 		virtual ObjRefBase *createTexture2D() = 0;
 		virtual void destroyTexture2D(ObjRefBase *pObject) = 0;
 		virtual void setTexture2DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;
@@ -97,6 +111,14 @@ namespace aurora {
 		virtual void setTexture2DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
 		virtual void updateTexture2DData(ObjRefBase *pObject, const sail::image &pImage) = 0;
 		virtual void updateTexture2DMipmap(ObjRefBase *pObject) = 0;
+
+		virtual ObjRefBase *createTexture3D() = 0;
+		virtual void destroyTexture3D(ObjRefBase *pObject) = 0;
+		virtual void setTexture3DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;
+		virtual void setTexture3DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) = 0;
+		virtual void setTexture3DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
+		virtual void updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth, const float *pDataRgba) = 0;
+		virtual void updateTexture3DMipmap(ObjRefBase *pObject) = 0;
 
 		virtual ObjRefBase *createDrawObject(const DrawObjectOptions &pOptions) = 0;
 		virtual void destroyDrawObject(ObjRefBase *pObject) = 0;

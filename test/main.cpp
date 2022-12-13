@@ -15,9 +15,9 @@ private:
 	aurora::DrawObject *m_DrawObject;
 	aurora::Texture2D *m_Texture;
 	aurora::VertexArrangement m_TestShaderArrange {
-		A_VERTEX(v_position, Float, 3),
-		A_VERTEX(v_color, Float, 3),
-		A_VERTEX(v_texCoords, Float, 2)
+		A_VNODE(v_position, Float, 3),
+		A_VNODE(v_color, Float, 3),
+		A_VNODE(v_texCoords, Float, 2)
 	};
 
 public:

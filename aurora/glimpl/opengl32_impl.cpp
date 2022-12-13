@@ -392,4 +392,90 @@ namespace aurora {
 		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(ref->vertexCount), eFmt, nullptr);
 		glBindVertexArray(0);
 	}
+
+	ObjRefBase *OpenGLImplementation<3, 2>::createTexture1D() {
+		uint32_t tex;
+		glGenTextures(1, &tex);
+		return new Reference(tex);
+	}
+
+	void OpenGLImplementation<3, 2>::destroyTexture1D(ObjRefBase *pObject) {
+		auto ref = dynamic_cast<Reference*>(pObject);
+		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
+
+		glDeleteTextures(1, &ref->resource);
+		delete ref;
+	}
+
+	void OpenGLImplementation<3, 2>::setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) {
+		auto ref = dynamic_cast<Reference*>(pObject);
+		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
+
+		GLenum e;
+		switch(pWrap) {
+			case TextureWrapType::Repeat: e = GL_REPEAT; break;
+			case TextureWrapType::ClampToEdge: e = GL_CLAMP_TO_EDGE; break;
+			case TextureWrapType::BorderColor: throw std::runtime_error("cannot use this method to set border color");
+		}
+
+		glBindTexture(GL_TEXTURE_1D, ref->resource);
+		glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, e);
+	}
+
+	void OpenGLImplementation<3, 2>::setTexture1DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) {
+		auto ref = dynamic_cast<Reference*>(pObject);
+		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
+
+		glBindTexture(GL_TEXTURE_1D, ref->resource);
+		glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		float color[4] = {pColor.r, pColor.g, pColor.b, 1};
+		glTexParameterfv(GL_TEXTURE_1D, GL_TEXTURE_BORDER_COLOR, color);
+	}
+
+	void
+	OpenGLImplementation<3, 2>::setTexture1DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) {
+		auto ref = dynamic_cast<Reference*>(pObject);
+		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
+
+		GLenum min, mag;
+
+		switch(pMin) {
+			case TextureMinFilter::Nearest: min = GL_NEAREST; break;
+			case TextureMinFilter::Linear: min = GL_LINEAR; break;
+			case TextureMinFilter::NearestMipmap: min = GL_NEAREST_MIPMAP_NEAREST; break;
+			case TextureMinFilter::LinearMipmap: min = GL_LINEAR_MIPMAP_LINEAR; break;
+		}
+
+		switch(pMag) {
+			case TextureMagFilter::Nearest: mag = GL_NEAREST; break;
+			case TextureMagFilter::Linear: mag = GL_LINEAR; break;
+		}
+
+		glBindTexture(GL_TEXTURE_1D, ref->resource);
+		glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, min);
+		glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, mag);
+	}
+
+	void OpenGLImplementation<3, 2>::updateTexture1DData(ObjRefBase *pObject, int pWidth, const float *pDataRgba) {
+		auto ref = dynamic_cast<Reference*>(pObject);
+		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
+
+		glBindTexture(GL_TEXTURE_1D, ref->resource);
+		glTexImage1D(GL_TEXTURE_1D,
+		             0,
+		             GL_RGBA8,
+		             static_cast<GLsizei>(pWidth),
+		             0,
+		             GL_RGBA,
+		             GL_UNSIGNED_BYTE,
+		             pDataRgba);
+	}
+
+	void OpenGLImplementation<3, 2>::updateTexture1DMipmap(ObjRefBase *pObject) {
+		auto ref = dynamic_cast<Reference*>(pObject);
+		if(ref == nullptr) throw std::runtime_error("invalid texture reference");
+
+		glBindTexture(GL_TEXTURE_1D, ref->resource);
+		glGenerateMipmap(GL_TEXTURE_1D);
+	}
 }

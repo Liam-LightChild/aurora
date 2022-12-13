@@ -82,6 +82,13 @@ namespace aurora {
 		ObjRefBase *createDrawObject(const DrawObjectOptions &pOptions) override;
 		void destroyDrawObject(ObjRefBase *pObject) override;
 		void performDraw(ObjRefBase *pDrawObject) override;
+		ObjRefBase *createTexture1D() override;
+		void destroyTexture1D(ObjRefBase *pObject) override;
+		void setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) override;
+		void setTexture1DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) override;
+		void setTexture1DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) override;
+		void updateTexture1DData(ObjRefBase *pObject, int pWidth, const float *pDataRgba) override;
+		void updateTexture1DMipmap(ObjRefBase *pObject) override;
 	};
 
 	template<>

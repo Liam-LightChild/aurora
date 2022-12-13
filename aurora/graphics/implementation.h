@@ -88,6 +88,14 @@ namespace aurora {
 		virtual void updateBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) = 0;
 		virtual void retrieveBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) = 0;
 
+		virtual ObjRefBase *createTexture1D() = 0;
+		virtual void destroyTexture1D(ObjRefBase *pObject) = 0;
+		virtual void setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;
+		virtual void setTexture1DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) = 0;
+		virtual void setTexture1DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) = 0;
+		virtual void updateTexture1DData(ObjRefBase *pObject, int pWidth, const float *pDataRgba) = 0;
+		virtual void updateTexture1DMipmap(ObjRefBase *pObject) = 0;
+
 		virtual ObjRefBase *createTexture2D() = 0;
 		virtual void destroyTexture2D(ObjRefBase *pObject) = 0;
 		virtual void setTexture2DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) = 0;

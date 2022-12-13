@@ -80,17 +80,16 @@ namespace aurora::aether {
 		Shader() = default;
 		~Shader() override = default;
 
-	private:
 		explicit Shader(const nlohmann::json &pJson) : Resource(pJson) {
 			for(const auto &item: pJson["parts"]) {
 				Stage s;
-				std::string stageStr = item["Stage"];
+				std::string stageStr = item["stage"];
 
-				if(stageStr == "Vertex") { s = Vertex; }
-				else if(stageStr == "Pixel") { s = Pixel; }
+				if(stageStr == "vertex") { s = Vertex; }
+				else if(stageStr == "vixel") { s = Pixel; }
 				else { throw std::runtime_error("invalid Shader Part Stage"); }
 
-				parts.emplace_back(s, item["aurora"]);
+				parts.emplace_back(s, item["src"]);
 			}
 
 			for(const auto &item: pJson["inputs"]) {
@@ -104,7 +103,6 @@ namespace aurora::aether {
 			}
 		}
 
-	public:
 		static inline Shader load(const std::filesystem::path &pPath) { return Shader(readFromFile(pPath)); }
 
 		explicit Shader(class AssetLoader*, const std::filesystem::path &pPath, const std::string&)
@@ -122,27 +120,35 @@ namespace aurora::aether {
 				std::string stage;
 
 				switch(item.stage) {
-					case Vertex: stage = "Vertex";
+					case Vertex: stage = "vertex";
 						break;
-					case Pixel: stage = "Pixel";
+					case Pixel: stage = "pixel";
 						break;
 				}
 
-				p.emplace_back(nlohmann::json::object({{"Stage",  stage},
-				                                       {"aurora", item.source}}));
+				p.emplace_back(nlohmann::json::object({
+					{"stage",  stage},
+					{"src", item.source}
+				}));
 			}
 
 			for(const auto &item: inputs) {
-				i.emplace_back(nlohmann::json::object({{"name",    item.name},
-				                                       {"purpose", item.purpose}}));
+				i.emplace_back(nlohmann::json::object({
+					{"name",    item.name},
+					{"purpose", item.purpose}
+				}));
 			}
 			for(const auto &item: outputs) {
-				o.emplace_back(nlohmann::json::object({{"name",  item.name},
-				                                       {"color", item.color}}));
+				o.emplace_back(nlohmann::json::object({
+					{"name",  item.name},
+					{"color", item.color}
+				}));
 			}
 			for(const auto &item: uniforms) {
-				u.emplace_back(nlohmann::json::object({{"name",    item.name},
-				                                       {"purpose", item.purpose}}));
+				u.emplace_back(nlohmann::json::object({
+					{"name",    item.name},
+					{"purpose", item.purpose}
+				}));
 			}
 
 			j["parts"] = p;

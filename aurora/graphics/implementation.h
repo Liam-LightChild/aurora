@@ -56,10 +56,16 @@ namespace aurora {
 		IndexBufferItemType indexBufferItemType = IndexBufferItemType::UnsignedInt;
 		VertexArrangement arrangement;
 
-		ObjRefBase *textures[32] {
+		ObjRefBase *textures[16] {
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		};
+
+		ObjRefBase *textures1D[8] {
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		};
+
+		ObjRefBase *textures3D[8] {
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 		};
 	};

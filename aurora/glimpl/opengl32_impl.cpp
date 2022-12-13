@@ -24,22 +24,22 @@ namespace aurora {
 		{"Texture13", ShaderUniformType::Texture13},
 		{"Texture14", ShaderUniformType::Texture14},
 		{"Texture15", ShaderUniformType::Texture15},
-		{"Texture16", ShaderUniformType::Texture16},
-		{"Texture17", ShaderUniformType::Texture17},
-		{"Texture18", ShaderUniformType::Texture18},
-		{"Texture19", ShaderUniformType::Texture19},
-		{"Texture20", ShaderUniformType::Texture20},
-		{"Texture21", ShaderUniformType::Texture21},
-		{"Texture22", ShaderUniformType::Texture22},
-		{"Texture23", ShaderUniformType::Texture23},
-		{"Texture24", ShaderUniformType::Texture24},
-		{"Texture25", ShaderUniformType::Texture25},
-		{"Texture26", ShaderUniformType::Texture26},
-		{"Texture27", ShaderUniformType::Texture27},
-		{"Texture28", ShaderUniformType::Texture28},
-		{"Texture29", ShaderUniformType::Texture29},
-		{"Texture30", ShaderUniformType::Texture30},
-		{"Texture31", ShaderUniformType::Texture31},
+		{"Texture1D0", ShaderUniformType::Texture1D0},
+		{"Texture1D1", ShaderUniformType::Texture1D1},
+		{"Texture1D2", ShaderUniformType::Texture1D2},
+		{"Texture1D3", ShaderUniformType::Texture1D3},
+		{"Texture1D4", ShaderUniformType::Texture1D4},
+		{"Texture1D5", ShaderUniformType::Texture1D5},
+		{"Texture1D6", ShaderUniformType::Texture1D6},
+		{"Texture1D7", ShaderUniformType::Texture1D7},
+		{"Texture3D0", ShaderUniformType::Texture3D0},
+		{"Texture3D1", ShaderUniformType::Texture3D1},
+		{"Texture3D2", ShaderUniformType::Texture3D2},
+		{"Texture3D3", ShaderUniformType::Texture3D3},
+		{"Texture3D4", ShaderUniformType::Texture3D4},
+		{"Texture3D5", ShaderUniformType::Texture3D5},
+		{"Texture3D6", ShaderUniformType::Texture3D6},
+		{"Texture3D7", ShaderUniformType::Texture3D7},
 	};
 
 	ObjRefBase *OpenGLImplementation<3, 2>::createShader(const aether::Shader &pShader) {
@@ -313,7 +313,7 @@ namespace aurora {
 			offset += size * a.count;
 		}
 
-		for(int i = 0; i < 32; ++i) {
+		for(int i = 0; i < 16; ++i) {
 			auto item = pOptions.textures[i];
 			if(item == nullptr) continue;
 
@@ -321,7 +321,29 @@ namespace aurora {
 			if(dyn == nullptr) throw std::runtime_error("invalid texture reference");
 
 			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, dyn->resource); // TODO other kinds of texture
+			glBindTexture(GL_TEXTURE_2D, dyn->resource);
+		}
+
+		for(int i = 0; i < 8; ++i) {
+			auto item = pOptions.textures1D[i];
+			if(item == nullptr) continue;
+
+			auto dyn = dynamic_cast<Reference*>(item);
+			if(dyn == nullptr) throw std::runtime_error("invalid texture reference");
+
+			glActiveTexture(GL_TEXTURE16 + i);
+			glBindTexture(GL_TEXTURE_1D, dyn->resource);
+		}
+
+		for(int i = 0; i < 8; ++i) {
+			auto item = pOptions.textures3D[i];
+			if(item == nullptr) continue;
+
+			auto dyn = dynamic_cast<Reference*>(item);
+			if(dyn == nullptr) throw std::runtime_error("invalid texture reference");
+
+			glActiveTexture(GL_TEXTURE24 + i);
+			glBindTexture(GL_TEXTURE_3D, dyn->resource);
 		}
 
 		glBindVertexArray(0);
@@ -363,22 +385,22 @@ namespace aurora {
 				case ShaderUniformType::Texture13: glUniform1i(loc, 13); break;
 				case ShaderUniformType::Texture14: glUniform1i(loc, 14); break;
 				case ShaderUniformType::Texture15: glUniform1i(loc, 15); break;
-				case ShaderUniformType::Texture16: glUniform1i(loc, 16); break;
-				case ShaderUniformType::Texture17: glUniform1i(loc, 17); break;
-				case ShaderUniformType::Texture18: glUniform1i(loc, 18); break;
-				case ShaderUniformType::Texture19: glUniform1i(loc, 19); break;
-				case ShaderUniformType::Texture20: glUniform1i(loc, 20); break;
-				case ShaderUniformType::Texture21: glUniform1i(loc, 21); break;
-				case ShaderUniformType::Texture22: glUniform1i(loc, 22); break;
-				case ShaderUniformType::Texture23: glUniform1i(loc, 23); break;
-				case ShaderUniformType::Texture24: glUniform1i(loc, 24); break;
-				case ShaderUniformType::Texture25: glUniform1i(loc, 25); break;
-				case ShaderUniformType::Texture26: glUniform1i(loc, 26); break;
-				case ShaderUniformType::Texture27: glUniform1i(loc, 27); break;
-				case ShaderUniformType::Texture28: glUniform1i(loc, 28); break;
-				case ShaderUniformType::Texture29: glUniform1i(loc, 29); break;
-				case ShaderUniformType::Texture30: glUniform1i(loc, 30); break;
-				case ShaderUniformType::Texture31: glUniform1i(loc, 31); break;
+				case ShaderUniformType::Texture1D0: glUniform1i(loc, 16); break;
+				case ShaderUniformType::Texture1D1: glUniform1i(loc, 17); break;
+				case ShaderUniformType::Texture1D2: glUniform1i(loc, 18); break;
+				case ShaderUniformType::Texture1D3: glUniform1i(loc, 19); break;
+				case ShaderUniformType::Texture1D4: glUniform1i(loc, 20); break;
+				case ShaderUniformType::Texture1D5: glUniform1i(loc, 21); break;
+				case ShaderUniformType::Texture1D6: glUniform1i(loc, 22); break;
+				case ShaderUniformType::Texture1D7: glUniform1i(loc, 23); break;
+				case ShaderUniformType::Texture3D0: glUniform1i(loc, 24); break;
+				case ShaderUniformType::Texture3D1: glUniform1i(loc, 25); break;
+				case ShaderUniformType::Texture3D2: glUniform1i(loc, 26); break;
+				case ShaderUniformType::Texture3D3: glUniform1i(loc, 27); break;
+				case ShaderUniformType::Texture3D4: glUniform1i(loc, 28); break;
+				case ShaderUniformType::Texture3D5: glUniform1i(loc, 29); break;
+				case ShaderUniformType::Texture3D6: glUniform1i(loc, 30); break;
+				case ShaderUniformType::Texture3D7: glUniform1i(loc, 31); break;
 			}
 		}
 

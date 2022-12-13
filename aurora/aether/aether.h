@@ -86,8 +86,8 @@ namespace aurora::aether {
 				std::string stageStr = item["stage"];
 
 				if(stageStr == "vertex") { s = Vertex; }
-				else if(stageStr == "vixel") { s = Pixel; }
-				else { throw std::runtime_error("invalid Shader Part Stage"); }
+				else if(stageStr == "pixel") { s = Pixel; }
+				else { throw std::runtime_error("invalid Shader Part stage"); }
 
 				parts.emplace_back(s, item["src"]);
 			}

@@ -4,6 +4,7 @@
   <component name="CidrRootsConfiguration">
     <sourceRoots>
       <file path="$PROJECT_DIR$/aurora" />
+      <file path="$PROJECT_DIR$/tools/alevelc" />
       <file path="$PROJECT_DIR$/tools/ameshc" />
       <file path="$PROJECT_DIR$/tools/amkindex" />
       <file path="$PROJECT_DIR$/tools/ashaderc" />

@@ -69,6 +69,10 @@ namespace aurora {
 		Texture3D5,
 		Texture3D6,
 		Texture3D7,
+
+		MatrixObject,
+		MatrixView,
+		MatrixPerspective,
 	};
 
 	enum class IndexBufferItemType {

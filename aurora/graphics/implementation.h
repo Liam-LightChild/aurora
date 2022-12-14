@@ -73,6 +73,17 @@ namespace aurora {
 		};
 	};
 
+	struct MatrixSet {
+		glm::mat4 object, view, perspective;
+
+		MatrixSet(const glm::mat4 &pObject, const glm::mat4 &pView, const glm::mat4 &pPerspective)
+			: object(pObject), view(pView), perspective(pPerspective) {}
+
+		MatrixSet() : object(glm::identity<glm::mat4>()),
+		              view(glm::identity<glm::mat4>()),
+		              perspective(glm::identity<glm::mat4>()) {}
+	};
+
 	class Implementation {
 	public:
 		virtual ~Implementation() = default;
@@ -122,9 +133,19 @@ namespace aurora {
 		virtual void updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth, const uint8_t *pDataRgba) = 0;
 		virtual void updateTexture3DMipmap(ObjRefBase *pObject) = 0;
 
+		virtual ObjRefBase *createFramebuffer(int pWidth, int pHeight) = 0;
+		virtual void reinitializeFramebuffer(ObjRefBase *pObject, int pWidth, int pHeight) = 0;
+		virtual void destroyFramebuffer(ObjRefBase *pObject) = 0;
+		virtual ObjRefBase *getFramebufferColorTexture2D(ObjRefBase *pObject) = 0;
+		virtual ObjRefBase *getFramebufferDepthStencilTexture2D(ObjRefBase *pObject) = 0;
+		virtual void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) = 0;
+		virtual void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pStartX, int pStartY, int pWidth, int pHeight) = 0;
+		virtual ObjRefBase *getDefaultFramebuffer() = 0;
+		virtual void activateFramebuffer(ObjRefBase *pObject) = 0;
+
 		virtual ObjRefBase *createDrawObject(const DrawObjectOptions &pOptions) = 0;
 		virtual void destroyDrawObject(ObjRefBase *pObject) = 0;
-		virtual void performDraw(ObjRefBase *pDrawObject) = 0;
+		virtual void performDraw(ObjRefBase *pDrawObject, const MatrixSet &pMatrices) = 0;
 
 		virtual void setupWindowHints() = 0;
 		virtual void setupWindowPostCreate() = 0;

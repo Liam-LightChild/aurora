@@ -7,6 +7,7 @@
 #define AURORA_APPLICATION_H
 
 #include "instance.h"
+#include "level/level.h"
 
 namespace aurora {
 
@@ -15,11 +16,16 @@ namespace aurora {
 		float m_DesiredFramerate = 60.0f;
 		Instance *m_Instance;
 		Window *m_Window;
+		level::Level *m_Level;
 
 	protected:
 		[[nodiscard]] float getDesiredFramerate() const { return m_DesiredFramerate; }
 
 		void setDesiredFramerate(float pFrameRate) { m_DesiredFramerate = pFrameRate; }
+
+		void setLevel(level::Level *pLevel) {
+			m_Level = pLevel;
+		}
 
 	public:
 		Application();

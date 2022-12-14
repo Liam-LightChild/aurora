@@ -1,0 +1,72 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:aether="https://www.liamcoalstudio.com/aurora/aether.xsd"
+        xmlns:lvl="https://www.liamcoalstudio.com/aurora/alvl.xsd"
+        targetNamespace="https://www.liamcoalstudio.com/aurora/alvl.xsd"
+        elementFormDefault="qualified">
+    <import namespace="https://www.liamcoalstudio.com/aurora/aether.xsd" schemaLocation="aether.xsd"/>
+
+    <complexType name="object">
+        <sequence>
+            <element name="position">
+                <complexType>
+                    <attribute name="x" type="double" use="required"/>
+                    <attribute name="y" type="double" use="required"/>
+                    <attribute name="z" type="double" use="required"/>
+                </complexType>
+            </element>
+            <choice>
+                <element name="rotation">
+                    <complexType>
+                        <attribute name="pitch" type="double" use="required"/>
+                        <attribute name="yaw" type="double" use="required"/>
+                        <attribute name="roll" type="double" use="required"/>
+                    </complexType>
+                </element>
+                <element name="rotation-quat">
+                    <complexType>
+                        <attribute name="w" type="double" use="required"/>
+                        <attribute name="x" type="double" use="required"/>
+                        <attribute name="y" type="double" use="required"/>
+                        <attribute name="z" type="double" use="required"/>
+                    </complexType>
+                </element>
+            </choice>
+            <element name="children" minOccurs="0">
+                <complexType>
+                    <sequence>
+                        <element name="object" type="lvl:object" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="controllers" minOccurs="0">
+                <complexType>
+                    <sequence>
+                        <element name="controller" maxOccurs="unbounded">
+                            <complexType>
+                                <sequence>
+                                    <element name="property" minOccurs="0" maxOccurs="unbounded">
+                                        <complexType>
+                                            <attribute name="name" type="string" use="required"/>
+                                            <attribute name="value" type="string" use="required"/>
+                                        </complexType>
+                                    </element>
+                                </sequence>
+                                <attribute name="type" type="string" use="required"/>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+    </complexType>
+
+    <element name="level">
+        <complexType>
+            <sequence>
+                <element name="object" type="lvl:object" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+            <attributeGroup ref="aether:resource"/>
+        </complexType>
+    </element>
+</schema>

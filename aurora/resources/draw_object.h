@@ -20,7 +20,7 @@ namespace aurora {
 		explicit DrawObject(const DrawObjectOptions &pOptions);
 		virtual ~DrawObject();
 
-		void draw();
+		void draw(const MatrixSet &pMatrices = MatrixSet());
 	};
 
 } // aurora

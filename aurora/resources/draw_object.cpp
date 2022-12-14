@@ -17,7 +17,7 @@ namespace aurora {
 		global->getImpl()->destroyDrawObject(m_Reference);
 	}
 
-	void DrawObject::draw() {
-		global->getImpl()->performDraw(m_Reference);
+	void DrawObject::draw(const MatrixSet &pMatrices) {
+		global->getImpl()->performDraw(m_Reference, pMatrices);
 	}
 } // aurora

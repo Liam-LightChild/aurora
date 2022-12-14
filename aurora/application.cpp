@@ -18,6 +18,8 @@ namespace aurora {
 		aurora::global = m_Instance;
 
 		m_Window = new aurora::Window(800, 600, "Title", false);
+		m_Instance->setWindow(m_Window);
+
 		aurora::injectBuiltinAssets(m_Instance->getAssetLoader());
 	}
 
@@ -29,10 +31,15 @@ namespace aurora {
 
 	void Application::render() {
 		m_Instance->getGraphics()->clear();
+		if(m_Level != nullptr) {
+			m_Level->render();
+		}
 	}
 
 	void Application::update() {
-
+		if(m_Level != nullptr) {
+			m_Level->update();
+		}
 	}
 
 	Instance *Application::getInstance() const {

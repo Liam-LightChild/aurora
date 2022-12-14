@@ -12,7 +12,12 @@
 #include <string>
 #include <utility>
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include "aurora/graphics/enums.h"
+
+namespace aurora {
+	class AssetLoader;
+}
 
 namespace aurora::aether {
 	struct Resource {
@@ -77,10 +82,20 @@ namespace aurora::aether {
 			Output(std::string pName, int pColor) : name(std::move(pName)), color(pColor) {}
 		};
 
+		struct VertexNode {
+			std::string name, type, from;
+			int size;
+
+			VertexNode(std::string pName, std::string pType, std::string pFrom, int pSize)
+				: name(std::move(pName)), type(std::move(pType)),
+				  size(pSize), from(std::move(pFrom)) {}
+		};
+
 		std::vector<Part> parts;
 		std::vector<Input> inputs;
 		std::vector<Output> outputs;
 		std::vector<Uniform> uniforms;
+		std::vector<VertexNode> vertexNodes;
 
 		Shader() = default;
 		~Shader() override = default;
@@ -106,6 +121,9 @@ namespace aurora::aether {
 			for(const auto &item: pJson["outputs"]) {
 				outputs.emplace_back(item["name"], item["color"]);
 			}
+			for(const auto &item: pJson["vertexNodes"]) {
+				vertexNodes.emplace_back(item["name"], item["type"], item["from"], item["size"]);
+			}
 		}
 
 		static inline Shader load(const std::filesystem::path &pPath) { return Shader(readFromFile(pPath)); }
@@ -120,6 +138,7 @@ namespace aurora::aether {
 			auto i = nlohmann::json::array();
 			auto o = nlohmann::json::array();
 			auto u = nlohmann::json::array();
+			auto v = nlohmann::json::array();
 
 			for(const auto &item: parts) {
 				std::string stage;
@@ -155,11 +174,20 @@ namespace aurora::aether {
 					{"purpose", item.purpose}
 				}));
 			}
+			for(const auto &item: vertexNodes) {
+				v.emplace_back(nlohmann::json::object({
+					{"name",    item.name},
+					{"type",    item.type},
+					{"from",    item.from},
+					{"size",    item.size}
+				}));
+			}
 
 			j["parts"] = p;
 			j["inputs"] = i;
 			j["outputs"] = o;
 			j["uniforms"] = u;
+			j["vertexNodes"] = v;
 
 			return j;
 		}
@@ -289,6 +317,9 @@ namespace aurora::aether {
 			}
 		}
 
+		Mesh(AssetLoader*, const std::filesystem::path &pPath, const std::string&)
+			: Mesh(nlohmann::json::from_cbor(std::ifstream(pPath))) {}
+
 		~Mesh() override = default;
 
 		nlohmann::json serialize() override {
@@ -310,6 +341,209 @@ namespace aurora::aether {
 				}));
 			}
 
+			j[".p"] = p;
+			j[".t"] = t;
+			j[".n"] = n;
+			j[".tris"] = ta;
+
+			return j;
+		}
+	};
+
+	struct OptimisedMesh {
+		std::vector<float> vertexData;
+		std::vector<uint32_t> indexData;
+
+		OptimisedMesh(const std::vector<float> &pVertexData, const std::vector<uint32_t> &pIndexData) : vertexData(
+			pVertexData), indexData(pIndexData) {}
+
+		OptimisedMesh(const Mesh &pMesh, const Shader &pShader, const glm::vec4 &pColor = {1, 1, 1, 1}) {
+			struct Vertex {
+				glm::vec3 position;
+				glm::vec2 texCoord;
+				glm::vec3 normal;
+
+				Vertex(const glm::vec3 &pPosition, const glm::vec2 &pTexCoord, const glm::vec3 &pNormal)
+					: position(pPosition), texCoord(pTexCoord), normal(pNormal) {}
+
+				bool operator==(const Vertex &pRhs) const {
+					return position == pRhs.position &&
+					       texCoord == pRhs.texCoord &&
+					       normal == pRhs.normal;
+				}
+
+				bool operator!=(const Vertex &pRhs) const {
+					return !(pRhs == *this);
+				}
+			};
+
+			std::vector<Vertex> vertices;
+			for(const auto &item: pMesh.tris) {
+				for(int i = 0; i < 3; ++i) {
+					auto vtx = Vertex(pMesh.positions[item.vertices[i]],
+									  pMesh.texCoords[item.texVertices[i]],
+									  pMesh.normals[item.normalVertices[i]]);
+					auto iter = vertices.begin(), end = vertices.end();
+
+					bool done = false;
+
+					for(int j = 0; iter != end; iter++, j++) {
+						if(*iter == vtx) {
+							indexData.emplace_back(j);
+							done = true;
+							break;
+						}
+					}
+
+					if(!done) {
+						vertices.emplace_back(vtx);
+						indexData.emplace_back(vertices.size() - 1);
+					}
+				}
+			}
+
+			for(const auto &item: vertices) {
+				for(const auto &node: pShader.vertexNodes) {
+					if(node.type != "Float") {
+						throw std::runtime_error("Non-float input values are not supported by this class");
+					}
+
+					if(node.from == "position2") {
+						vertexData.emplace_back(item.position.x);
+						vertexData.emplace_back(item.position.y);
+					} else if(node.from == "position3") {
+						vertexData.emplace_back(item.position.x);
+						vertexData.emplace_back(item.position.y);
+						vertexData.emplace_back(item.position.z);
+					} else if(node.from == "color3_rgb") {
+						vertexData.emplace_back(pColor.r);
+						vertexData.emplace_back(pColor.g);
+						vertexData.emplace_back(pColor.b);
+					} else if(node.from == "color4_rgba") {
+						vertexData.emplace_back(pColor.r);
+						vertexData.emplace_back(pColor.g);
+						vertexData.emplace_back(pColor.b);
+						vertexData.emplace_back(pColor.a);
+					} else if(node.from == "tex1") {
+						vertexData.emplace_back(item.texCoord.s);
+					} else if(node.from == "tex2") {
+						vertexData.emplace_back(item.texCoord.s);
+						vertexData.emplace_back(item.texCoord.t);
+					} else if(node.from == "tex3") {
+						vertexData.emplace_back(item.texCoord.s);
+						vertexData.emplace_back(item.texCoord.t);
+						vertexData.emplace_back(item.texCoord.r);
+					} else throw std::runtime_error("Unsupported mesh input value " + node.from);
+				}
+			}
+		}
+	};
+
+	struct Level : public Resource {
+		static constexpr const char *schemaUri = "https://www.liamcoalstudio.com/aurora/alvl.xsd";
+
+		struct Controller {
+			std::string type;
+			std::unordered_map<std::string, std::string> properties;
+
+			Controller() = default;
+
+			explicit Controller(const nlohmann::json &pJson) {
+				type = pJson["type"];
+
+				for(const auto &[key, value]: pJson["properties"].items()) {
+					properties.insert({key, value});
+				}
+			}
+
+			nlohmann::json serialize() const {
+				nlohmann::json j;
+				j["type"] = type;
+				nlohmann::json prop;
+
+				for(const auto &[key, value]: properties) {
+					prop[key] = value;
+				}
+
+				j["properties"] = prop;
+				return j;
+			}
+		};
+
+		struct Object {
+			std::string name;
+			glm::dvec3 position{};
+			glm::dquat rotation{};
+			std::unordered_map<std::string, Object> objects;
+			std::vector<Controller> controllers;
+
+			Object() = default;
+
+			explicit Object(const nlohmann::json &pJson) {
+				name = pJson["name"];
+				auto pos = pJson["pos"], rot = pJson["rot"];
+				position = {pos[0], pos[1], pos[2]};
+				rotation = {rot[0], rot[1], rot[2], rot[3]};
+
+				if(pJson.contains("children")) {
+					for(const auto &item: pJson["children"]) {
+						Object obj(item);
+						objects.insert({obj.name, obj});
+					}
+				}
+
+				if(pJson.contains("controllers")) {
+					for(const auto &item: pJson["controllers"]) {
+						controllers.emplace_back(item);
+					}
+				}
+			}
+
+			nlohmann::json serialize() const {
+				nlohmann::json j;
+				j["name"] = name;
+				j["pos"] = {position.x, position.y, position.z};
+				j["rot"] = {rotation.w, rotation.x, rotation.y, rotation.z};
+
+				auto children = nlohmann::json::array();
+				auto controllerList = nlohmann::json::array();
+
+				for(const auto &item: objects) {
+					children.emplace_back(item.second.serialize());
+				}
+
+				for(const auto &item: controllers) {
+					controllerList.emplace_back(item.serialize());
+				}
+
+				j["children"] = children;
+				j["controllers"] = controllerList;
+				return j;
+			}
+		};
+
+		std::unordered_map<std::string, Object> objects;
+
+		Level() = default;
+
+		explicit Level(const nlohmann::json &pJson) : Resource(pJson) {
+			if(pJson.contains("root")) {
+				for(const auto &item: pJson["root"]) {
+					Object obj(item);
+					objects.insert({obj.name, obj});
+				}
+			}
+		}
+
+		nlohmann::json serialize() override {
+			auto j = Resource::serialize();
+			auto root = nlohmann::json::array();
+
+			for(const auto &item: objects) {
+				root.emplace_back(item.second.serialize());
+			}
+
+			j["root"] = root;
 			return j;
 		}
 	};

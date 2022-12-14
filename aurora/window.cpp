@@ -21,6 +21,7 @@ namespace aurora {
 			throw std::runtime_error(desc);
 		}
 
+		glfwSetWindowUserPointer(m_Window, this);
 		glfwSetWindowSizeCallback(m_Window, staticWindowSizeChanged);
 
 		glfwMakeContextCurrent(m_Window);
@@ -33,7 +34,11 @@ namespace aurora {
 	}
 
 	void Window::staticWindowSizeChanged([[maybe_unused]] GLFWwindow *pWindow, int pWidth, int pHeight) {
+		auto self = reinterpret_cast<Window*>(glfwGetWindowUserPointer(pWindow));
 		global->getImpl()->updateViewportSize(pWidth, pHeight);
+		for(const auto &item : self->m_Framebuffers) {
+			item->reinitialize(pWidth, pHeight);
+		}
 	}
 
 	bool Window::shouldWindowBeOpen() {
@@ -47,5 +52,19 @@ namespace aurora {
 	void Window::finishFrame() {
 		glfwPollEvents();
 		global->getImpl()->performFinishFrame(this);
+	}
+
+	glm::ivec2 Window::getSize() {
+		int w, h;
+		glfwGetWindowSize(m_Window, &w, &h);
+		return {w, h};
+	}
+
+	void Window::addFramebuffer(Framebuffer *pFramebuffer) {
+		m_Framebuffers.emplace_back(pFramebuffer);
+	}
+
+	void Window::removeFramebuffer(Framebuffer *pFramebuffer) {
+		m_Framebuffers.erase(std::remove(m_Framebuffers.begin(), m_Framebuffers.end(), pFramebuffer), m_Framebuffers.end());
 	}
 }// namespace aurora

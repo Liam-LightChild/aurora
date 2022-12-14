@@ -1,3 +1,8 @@
+/*
+ * This file is part of Aurora Game Engine.
+ * https://github.com/liam-lightchild/aurora
+ */
+
 #include <aurora/aether/aether.h>
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -156,10 +161,11 @@ int main(int pArgCount, char **pArgs) {
 
 			if(childElementType == "input" && shaderPartTypeEnum == aurora::aether::Shader::Vertex) {
 				auto name = XMLString::transcode(childElement->getAttributeNS(ashdrNs, XMLString::transcode("name")));
-				auto
-					purpose = XMLString::transcode(childElement->getAttributeNS(ashdrNs, XMLString::transcode("from")));
-				aurora::aether::Shader::Input input(name, purpose);
-				sh.inputs.emplace_back(std::move(input));
+				auto purpose = XMLString::transcode(childElement->getAttributeNS(ashdrNs, XMLString::transcode("from")));
+				auto elementType = XMLString::transcode(childElement->getAttributeNS(ashdrNs, XMLString::transcode("element_type")));
+				auto sizeStr = XMLString::transcode(childElement->getAttributeNS(ashdrNs, XMLString::transcode("size")));
+				sh.inputs.emplace_back(name, purpose);
+				sh.vertexNodes.emplace_back(name, elementType, purpose, std::stoi(sizeStr));
 			}
 
 			if(childElementType == "output" && shaderPartTypeEnum == aurora::aether::Shader::Pixel) {

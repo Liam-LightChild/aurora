@@ -57,6 +57,29 @@ namespace aurora {
 			~DrawObjectReference() override = default;
 		};
 
+		class FramebufferReference : public Reference {
+		public:
+			Reference *colorTexture, *depthStencilRendernode;
+			int width, height;
+
+			FramebufferReference(uint32_t pResource, Reference *pColorTexture, Reference *pDepthStencilTexture,
+			                     int pWidth,
+			                     int pHeight)
+				: Reference(pResource), colorTexture(pColorTexture), depthStencilRendernode(pDepthStencilTexture),
+				  width(pWidth), height(pHeight) {}
+
+			~FramebufferReference() override = default;
+		};
+
+		class DefaultFramebufferReference : public Reference {
+		public:
+			explicit DefaultFramebufferReference(uint32_t pResource) : Reference(pResource) {}
+
+			~DefaultFramebufferReference() override = default;
+		};
+
+		DefaultFramebufferReference m_DefaultFramebufferRef {0};
+
 	public:
 		~OpenGLImplementation() override = default;
 
@@ -82,7 +105,7 @@ namespace aurora {
 		void updateTexture2DMipmap(ObjRefBase *pObject) override;
 		ObjRefBase *createDrawObject(const DrawObjectOptions &pOptions) override;
 		void destroyDrawObject(ObjRefBase *pObject) override;
-		void performDraw(ObjRefBase *pDrawObject) override;
+		void performDraw(ObjRefBase *pDrawObject, const MatrixSet &pMatrices) override;
 		ObjRefBase *createTexture1D() override;
 		void destroyTexture1D(ObjRefBase *pObject) override;
 		void setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) override;
@@ -98,6 +121,16 @@ namespace aurora {
 		void updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth, const uint8_t *pDataRgba) override;
 		void updateTexture3DMipmap(ObjRefBase *pObject) override;
 		void updateTexture2DData(ObjRefBase *pObject, int pWidth, int pHeight, const uint8_t *pDataRgba) override;
+		ObjRefBase *createFramebuffer(int pWidth, int pHeight) override;
+		void reinitializeFramebuffer(ObjRefBase *pObject, int pWidth, int pHeight) override;
+		void destroyFramebuffer(ObjRefBase *pObject) override;
+		ObjRefBase *getFramebufferColorTexture2D(ObjRefBase *pObject) override;
+		ObjRefBase *getFramebufferDepthStencilTexture2D(ObjRefBase *pObject) override;
+		void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) override;
+		void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pStartX, int pStartY, int pWidth,
+		                            int pHeight) override;
+		ObjRefBase *getDefaultFramebuffer() override;
+		void activateFramebuffer(ObjRefBase *pObject) override;
 	};
 
 	template<>

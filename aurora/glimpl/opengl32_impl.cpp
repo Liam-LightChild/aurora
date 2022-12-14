@@ -9,6 +9,8 @@
 #include <GLFW/glfw3.h>
 #include <boost/log/trivial.hpp>
 #include <memory>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace aurora {
 	std::unordered_map<std::string, ShaderUniformType> uniformTypes {
@@ -44,6 +46,9 @@ namespace aurora {
 		{"Texture3D5", ShaderUniformType::Texture3D5},
 		{"Texture3D6", ShaderUniformType::Texture3D6},
 		{"Texture3D7", ShaderUniformType::Texture3D7},
+		{"MatrixObject", ShaderUniformType::MatrixObject},
+		{"MatrixView", ShaderUniformType::MatrixView},
+		{"MatrixPerspective", ShaderUniformType::MatrixPerspective}
 	};
 
 	ObjRefBase *OpenGLImplementation<3, 2>::createShader(const aether::Shader &pShader) {
@@ -120,6 +125,9 @@ namespace aurora {
 	void OpenGLImplementation<3, 2>::setupWindowPostCreate() {
 		glewExperimental = true;
 		glewInit();
+
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void OpenGLImplementation<3, 2>::performFinishFrame(Window *pWindow) {
@@ -361,7 +369,7 @@ namespace aurora {
 		glDeleteVertexArrays(1, &ref->resource);
 	}
 
-	void OpenGLImplementation<3, 2>::performDraw(ObjRefBase *pDrawObject) {
+	void OpenGLImplementation<3, 2>::performDraw(ObjRefBase *pDrawObject, const MatrixSet &pMatrices) {
 		auto ref = dynamic_cast<DrawObjectReference*>(pDrawObject);
 		if(ref == nullptr) throw std::runtime_error("invalid draw object reference");
 
@@ -405,6 +413,9 @@ namespace aurora {
 				case ShaderUniformType::Texture3D5: glUniform1i(loc, 29); break;
 				case ShaderUniformType::Texture3D6: glUniform1i(loc, 30); break;
 				case ShaderUniformType::Texture3D7: glUniform1i(loc, 31); break;
+				case ShaderUniformType::MatrixObject: glUniformMatrix4fv(loc, 1, false, glm::value_ptr(pMatrices.object)); break;
+				case ShaderUniformType::MatrixView: glUniformMatrix4fv(loc, 1, false, glm::value_ptr(pMatrices.view)); break;
+				case ShaderUniformType::MatrixPerspective: glUniformMatrix4fv(loc, 1, false, glm::value_ptr(pMatrices.perspective)); break;
 			}
 		}
 
@@ -613,5 +624,138 @@ namespace aurora {
 		             GL_RGBA,
 		             GL_UNSIGNED_BYTE,
 		             pDataRgba);
+	}
+
+	ObjRefBase *OpenGLImplementation<3, 2>::createFramebuffer(int pWidth, int pHeight) {
+		uint32_t resource;
+		glGenFramebuffers(1, &resource);
+		auto ref = new FramebufferReference(resource, nullptr, nullptr, pWidth, pHeight);
+		reinitializeFramebuffer(ref, pWidth, pHeight);
+		return ref;
+	}
+
+	void OpenGLImplementation<3, 2>::reinitializeFramebuffer(ObjRefBase *pObject, int pWidth, int pHeight) {
+		auto ref = dynamic_cast<FramebufferReference*>(pObject);
+		if(ref == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
+
+		glBindFramebuffer(GL_FRAMEBUFFER, ref->resource);
+
+		if(ref->colorTexture != nullptr) glDeleteTextures(1, &ref->colorTexture->resource);
+		if(ref->depthStencilRendernode != nullptr) glDeleteRenderbuffers(1, &ref->depthStencilRendernode->resource);
+
+		delete ref->colorTexture;
+		delete ref->depthStencilRendernode;
+
+		uint32_t colTex;
+		glGenTextures(1, &colTex);
+
+		glBindTexture(GL_TEXTURE_2D, colTex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pWidth, pHeight, 0, GL_RGBA, GL_FLOAT, nullptr);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colTex, 0);
+
+		uint32_t depthStencilRbo;
+		glGenRenderbuffers(1, &depthStencilRbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, depthStencilRbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, pWidth, pHeight);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilRbo);
+
+		auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+		if(status != GL_FRAMEBUFFER_COMPLETE) {
+			switch(status) {
+				case GL_FRAMEBUFFER_UNDEFINED: throw std::runtime_error("OpenGL 3.2: framebuffer undefined");
+				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: throw std::runtime_error("OpenGL 3.2: framebuffer incomplete attachment");
+				case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: throw std::runtime_error("OpenGL 3.2: framebuffer has no images");
+				case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER: throw std::runtime_error("OpenGL 3.2: framebuffer incomplete draw buffer");
+				case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER: throw std::runtime_error("OpenGL 3.2: framebuffer incomplete read buffer");
+				case GL_FRAMEBUFFER_UNSUPPORTED: throw std::runtime_error("OpenGL 3.2: framebuffer configuration unsupported");
+				case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: throw std::runtime_error("OpenGL 3.2: framebuffer incomplete multisample");
+				case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS: throw std::runtime_error("OpenGL 3.2: framebuffer incomplete layer targets");
+				default: throw std::runtime_error("OpenGL 3.2: framebuffer (unknown error)");
+			}
+		}
+
+		ref->colorTexture = new Reference(colTex);
+		ref->depthStencilRendernode = new Reference(depthStencilRbo);
+		ref->width = pWidth;
+		ref->height = pHeight;
+	}
+
+	void OpenGLImplementation<3, 2>::destroyFramebuffer(ObjRefBase *pObject) {
+		auto ref = dynamic_cast<FramebufferReference*>(pObject);
+		if(ref == nullptr) { return; }
+
+		if(ref->colorTexture != nullptr) glDeleteTextures(1, &ref->colorTexture->resource);
+		if(ref->depthStencilRendernode != nullptr) glDeleteRenderbuffers(1, &ref->depthStencilRendernode->resource);
+
+		delete ref->colorTexture;
+		delete ref->depthStencilRendernode;
+
+		glDeleteFramebuffers(1, &ref->resource);
+	}
+
+	ObjRefBase *OpenGLImplementation<3, 2>::getFramebufferColorTexture2D(ObjRefBase *pObject) {
+		auto ref = dynamic_cast<FramebufferReference*>(pObject);
+		if(ref == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
+
+		return ref->colorTexture;
+	}
+
+	ObjRefBase *OpenGLImplementation<3, 2>::getFramebufferDepthStencilTexture2D(ObjRefBase *pObject) {
+		BOOST_LOG_TRIVIAL(error) << "Not implemented: Depth + Stencil textures on framebuffers in Aurora OpenGL 3.2";
+		return nullptr;
+	}
+
+	void OpenGLImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) {
+		auto refs = dynamic_cast<FramebufferReference*>(pSource);
+		if(refs == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, refs->resource);
+
+		if(dynamic_cast<DefaultFramebufferReference*>(pTarget)) {
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+			glBlitFramebuffer(0, 0, refs->width, refs->height, 0, 0, refs->width, refs->height, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		} else {
+			auto reft = dynamic_cast<FramebufferReference*>(pTarget);
+			if(reft == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, reft->resource);
+			glBlitFramebuffer(0, 0, refs->width, refs->height, 0, 0, reft->width, reft->height, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		}
+	}
+
+	void OpenGLImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pStartX,
+	                                                        int pStartY, int pWidth, int pHeight) {
+		auto refs = dynamic_cast<FramebufferReference*>(pSource);
+		if(refs == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, refs->resource);
+
+		if(dynamic_cast<DefaultFramebufferReference*>(pTarget)) {
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+			glBlitFramebuffer(pStartX, pStartX, pWidth, pHeight, 0, 0, refs->width, refs->height, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		} else {
+			auto reft = dynamic_cast<FramebufferReference*>(pTarget);
+			if(reft == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, reft->resource);
+			glBlitFramebuffer(pStartX, pStartX, pWidth, pHeight, 0, 0, reft->width, reft->height, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		}
+	}
+
+	ObjRefBase *OpenGLImplementation<3, 2>::getDefaultFramebuffer() {
+		return &m_DefaultFramebufferRef;
+	}
+
+	void OpenGLImplementation<3, 2>::activateFramebuffer(ObjRefBase *pObject) {
+		if(dynamic_cast<DefaultFramebufferReference*>(pObject)) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		} else {
+			auto ref = dynamic_cast<FramebufferReference*>(pObject);
+			if(ref == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
+			glBindFramebuffer(GL_FRAMEBUFFER, ref->resource);
+		}
 	}
 }

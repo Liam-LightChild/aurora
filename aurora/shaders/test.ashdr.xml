@@ -9,23 +9,28 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://www.liamcoalstudio.com/aurora/ashdr.xsd ../../aurora/aether/ashdr.xsd
                             https://www.liamcoalstudio.com/aurora/aether.xsd ../../aurora/aether/aether.xsd"
-           aether:id="test:test.shader">
+           aether:id="aurora:test.shader">
     <sh:vertex>
-        <sh:input sh:name="v_position" sh:from="position3"/>
-        <sh:input sh:name="v_color" sh:from="color3_rgb"/>
+        <sh:input sh:name="v_position" sh:element_type="Float" sh:size="3" sh:from="position3"/>
+        <sh:input sh:name="v_color" sh:element_type="Float" sh:size="3" sh:from="color3_rgb"/>
+
+        <sh:uniform sh:name="t_object" sh:from="MatrixObject"/>
+        <sh:uniform sh:name="t_view" sh:from="MatrixView"/>
+        <sh:uniform sh:name="t_perspective" sh:from="MatrixPerspective"/>
 
         <sh:glsl><![CDATA[
             in vec3 v_position;
             in vec3 v_color;
-            in vec2 v_texCoords;
 
             out vec3 f_color;
-            out vec2 f_texCoords;
+
+            uniform mat4 t_object;
+            uniform mat4 t_view;
+            uniform mat4 t_perspective;
 
             void main() {
-                gl_Position = vec4(v_position, 1);
+                gl_Position = t_perspective * (t_view * (t_object * vec4(v_position, 1)));
                 f_color = v_color;
-                f_texCoords = v_texCoords;
             }
         ]]></sh:glsl>
     </sh:vertex>
@@ -33,18 +38,13 @@
     <sh:pixel>
         <sh:output sh:name="out_color" sh:to="0"/>
 
-        <sh:uniform sh:name="tex" sh:from="Texture0"/>
-
         <sh:glsl><![CDATA[
             in vec3 f_color;
-            in vec2 f_texCoords;
 
             out vec4 out_color;
 
-            uniform sampler2D tex;
-
             void main() {
-                out_color = vec4(f_color, 1) * texture(tex, f_texCoords);
+                out_color = vec4(f_color, 1);
             }
         ]]></sh:glsl>
     </sh:pixel>

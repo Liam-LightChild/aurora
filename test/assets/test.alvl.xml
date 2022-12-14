@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<lvl:level xmlns:lvl="https://www.liamcoalstudio.com/aurora/alvl.xsd"
+           xmlns:aether="https://www.liamcoalstudio.com/aurora/aether.xsd"
+           aether:id="test:test.level">
+    <lvl:object name="CameraRoot">
+        <lvl:position x="0" y="0" z="0"/>
+        <lvl:rotation pitch="0" yaw="0" roll="0"/>
+        <lvl:children>
+            <lvl:object name="Camera3D">
+                <lvl:position x="0" y="0" z="0"/>
+                <lvl:rotation pitch="0" yaw="0" roll="0"/>
+                <lvl:controllers>
+                    <lvl:controller type="aurora:camera/3d">
+                        <lvl:property name="CameraId" value="1"/>
+                        <lvl:property name="FieldOfView" value="70"/>
+                        <lvl:property name="Scale" value="5"/>
+                        <lvl:property name="ClearColor" value="4444FF"/>
+                    </lvl:controller>
+                </lvl:controllers>
+            </lvl:object>
+            <lvl:object name="Camera2D">
+                <lvl:position x="0" y="0" z="0"/>
+                <lvl:rotation pitch="0" yaw="0" roll="0"/>
+                <lvl:controllers>
+                    <lvl:controller type="aurora:camera/2d">
+                        <lvl:property name="CameraId" value="2"/>
+                        <lvl:property name="Scale" value="5"/>
+                        <lvl:property name="ClearColor" value="4444FF"/>
+                    </lvl:controller>
+                </lvl:controllers>
+            </lvl:object>
+        </lvl:children>
+    </lvl:object>
+
+    <lvl:object name="Cube">
+        <lvl:position x="0" y="0" z="-5"/>
+        <lvl:rotation pitch="35" yaw="20" roll="150"/>
+        <lvl:controllers>
+            <lvl:controller type="aurora:mesh">
+                <lvl:property name="AssetId" value="test:test.mesh"/>
+            </lvl:controller>
+            <lvl:controller type="aurora:renderer">
+                <lvl:property name="ShaderAssetId" value="aurora:test.shader"/>
+            </lvl:controller>
+        </lvl:controllers>
+    </lvl:object>
+</lvl:level>

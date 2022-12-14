@@ -14,6 +14,16 @@
             <enumeration value="position3"/>
             <enumeration value="color3_rgb"/>
             <enumeration value="color4_rgba"/>
+            <enumeration value="tex1"/>
+            <enumeration value="tex2"/>
+            <enumeration value="tex3"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="shader_input_type">
+        <restriction>
+            <enumeration value="Float"/>
+            <enumeration value="Int"/>
         </restriction>
     </simpleType>
 
@@ -26,6 +36,8 @@
                             <element name="input" maxOccurs="unbounded">
                                 <complexType>
                                     <attribute name="name" type="string" use="required"/>
+                                    <attribute name="element_type" type="sh:shader_input_type" use="required"/>
+                                    <attribute name="size" type="int" use="required"/>
                                     <attribute name="from" type="sh:shader_input" use="required"/>
                                 </complexType>
                             </element>

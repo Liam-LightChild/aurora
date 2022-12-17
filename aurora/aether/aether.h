@@ -40,11 +40,7 @@ namespace aurora::aether {
 
 		static inline nlohmann::json readFromFile(const std::filesystem::path &pPath) {
 			std::ifstream input(pPath);
-			input.seekg(0, std::ios::end);
-			std::vector<uint8_t> bytes(input.tellg());
-			input.seekg(0);
-			input.read(reinterpret_cast<char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
-			return nlohmann::json::from_cbor(bytes);
+			return nlohmann::json::from_cbor(input);
 		}
 	};
 
@@ -397,7 +393,7 @@ namespace aurora::aether {
 
 					if(!done) {
 						vertices.emplace_back(vtx);
-						indexData.emplace_back(vertices.size() - 1);
+						indexData.emplace_back((uint32_t)vertices.size() - 1);
 					}
 				}
 			}

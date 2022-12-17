@@ -320,7 +320,7 @@ namespace aurora {
 			}
 
 			auto attr = glGetAttribLocation(prog, a.name.c_str());
-			glVertexAttribPointer(attr, a.count, e, false, stride, reinterpret_cast<void*>(offset));
+			glVertexAttribPointer(attr, a.count, e, false, stride, reinterpret_cast<void*>(static_cast<intptr_t>(offset)));
 			glEnableVertexAttribArray(attr);
 			offset += size * a.count;
 		}

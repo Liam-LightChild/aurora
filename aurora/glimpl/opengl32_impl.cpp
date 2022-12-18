@@ -859,13 +859,13 @@ namespace aurora {
 
 		if(dynamic_cast<DefaultFramebufferReference *>(pTarget)) {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-			glBlitFramebuffer(pSourceStartX, pSourceStartX, pWidth, pHeight, pTargetStartX, pTargetStartY, pWidth, pHeight,
+			glBlitFramebuffer(pSourceStartX, pSourceStartY, pWidth, pHeight, pTargetStartX, pTargetStartY, pWidth, pHeight,
 			                  GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 		} else {
 			auto reft = dynamic_cast<FramebufferReference *>(pTarget);
 			if(reft == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, reft->resource);
-			glBlitFramebuffer(pSourceStartX, pSourceStartX, pWidth, pHeight, pTargetStartX, pTargetStartY, pWidth, pHeight,
+			glBlitFramebuffer(pSourceStartX, pSourceStartY, pWidth, pHeight, pTargetStartX, pTargetStartY, pWidth, pHeight,
 			                  GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 		}
 	}

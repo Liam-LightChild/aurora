@@ -13,9 +13,9 @@ namespace aurora {
 		for(const auto &item: pShader.vertexNodes) {
 			VertexInputType type;
 
-			if(item.type == "Float") type = VertexInputType::Float;
-			else if(item.type == "Int") type = VertexInputType::Int;
-			else if(item.type == "Boolean") type = VertexInputType::Boolean;
+			if(item.type == "Float") { type = VertexInputType::Float; }
+			else if(item.type == "Int") { type = VertexInputType::Int; }
+			else if(item.type == "Boolean") { type = VertexInputType::Boolean; }
 			else {
 				BOOST_LOG_TRIVIAL(error) << "Invalid shader input type " << item.type << "; skipping";
 				continue;

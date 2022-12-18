@@ -17,6 +17,7 @@
 namespace aurora::level {
 
 	class Level;
+
 	class Controller;
 
 	class Object {
@@ -27,8 +28,8 @@ namespace aurora::level {
 		glm::mat4 m_ObjectMatrix{};
 		glm::dvec3 m_Position;
 		glm::dquat m_Rotation;
-		std::unordered_map<std::string, Object*> m_Children;
-		std::vector<Controller*> m_Controllers;
+		std::unordered_map<std::string, Object *> m_Children;
+		std::vector<Controller *> m_Controllers;
 
 	public:
 		Object(Level *pLevel, Object *pParent, const glm::dvec3 &pPosition, const glm::dquat &pRotation,
@@ -46,7 +47,7 @@ namespace aurora::level {
 		const glm::mat4 &getObjectMatrix() const;
 		[[nodiscard]] Level *getLevel() const;
 		[[nodiscard]] Object *getParent() const;
-		[[nodiscard]] const std::unordered_map<std::string, Object*> &getChildren() const;
+		[[nodiscard]] const std::unordered_map<std::string, Object *> &getChildren() const;
 		[[nodiscard]] const std::vector<Controller *> &getControllers() const;
 		[[nodiscard]] glm::dvec3 getPosition() const;
 		[[nodiscard]] glm::dquat getRotation() const;
@@ -62,17 +63,17 @@ namespace aurora::level {
 		virtual void createController(const aether::Level::Controller &pAether);
 		virtual void deleteController(Controller *pController);
 		virtual Controller *getController(const std::string &pType) const;
-		virtual Controller *findController(const std::function<bool(Controller*)> &pPredicate) const;
+		virtual Controller *findController(const std::function<bool(Controller *)> &pPredicate) const;
 
 		template<typename T>
 		T *getController() const {
-			return dynamic_cast<T*>(getController(T::type));
+			return dynamic_cast<T *>(getController(T::type));
 		}
 
 		template<typename T>
 		T *findControllerByType() const {
-			return dynamic_cast<T*>(findController([](Controller *pController) {
-				return dynamic_cast<T*>(pController) != nullptr;
+			return dynamic_cast<T *>(findController([](Controller *pController) {
+				return dynamic_cast<T *>(pController) != nullptr;
 			}));
 		}
 

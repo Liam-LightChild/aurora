@@ -11,8 +11,9 @@
 
 namespace aurora {
 	AssetLoader::AssetLoader(const std::filesystem::path &pPath) {
-		if(!std::filesystem::exists(pPath / "assets.idx.aet"))
+		if(!std::filesystem::exists(pPath / "assets.idx.aet")) {
 			throw std::runtime_error("no assets index present in " + std::filesystem::absolute(pPath).string());
+		}
 		std::ifstream indexIn(pPath / "assets.idx.aet");
 		auto indexJson = nlohmann::json::from_cbor(indexIn);
 
@@ -25,11 +26,23 @@ namespace aurora {
 		pLoader->inject("aurora:test.shader", new Shader(shaders::test));
 
 		auto tex = new Texture2D;
-		uint8_t missingTexture2D[4*4] {
-			255, 0, 255, 255,
-			0, 0, 0, 255,
-			0, 0, 0, 255,
-			255, 0, 255, 255,
+		uint8_t missingTexture2D[4 * 4]{
+			255,
+			0,
+			255,
+			255,
+			0,
+			0,
+			0,
+			255,
+			0,
+			0,
+			0,
+			255,
+			255,
+			0,
+			255,
+			255,
 		};
 		tex->setFilters(TextureMinFilter::NearestMipmap, TextureMagFilter::Nearest);
 		tex->setWrap(TextureWrapType::Repeat);

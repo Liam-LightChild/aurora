@@ -15,7 +15,11 @@ namespace aurora::level {
 		glm::dquat m_LastRotation{};
 		float m_Scale = 1.0f;
 		glm::ivec2 m_Size;
-		glm::vec3 m_ClearColor{0,0,0};
+		glm::vec3 m_ClearColor{
+			0,
+			0,
+			0
+		};
 
 	public:
 		static const std::string type;

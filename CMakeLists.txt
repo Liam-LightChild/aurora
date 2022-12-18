@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.23)
 project(aurora)
 
-if(VCPKG_PATH)
+if (VCPKG_PATH)
     include(${VCPKG_PATH})
-endif()
+endif ()
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -32,8 +32,8 @@ target_include_directories(aurora PUBLIC .)
 install(TARGETS aurora CONFIGURATIONS Release ARCHIVE)
 install(DIRECTORY aurora CONFIGURATIONS Release TYPE INCLUDE FILES_MATCHING PATTERN *.h)
 
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     install(FILES aurora.cmake DESTINATION share/cmake/modules)
-endif()
+endif ()
 
 add_subdirectory(test)

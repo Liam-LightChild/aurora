@@ -24,8 +24,11 @@ namespace aurora {
 		Instance(ImplementationFinder *pFinder, const std::filesystem::path &pAssetPath);
 
 		[[nodiscard]] inline Implementation *getImpl() const { return m_Implementation; }
+
 		[[nodiscard]] inline AssetLoader *getAssetLoader() const { return m_AssetLoader; }
+
 		[[nodiscard]] inline Graphics *getGraphics() const { return m_Graphics; }
+
 		[[nodiscard]] inline Window *getWindow() const { return m_Window; }
 
 		void setWindow(Window *pWindow) {

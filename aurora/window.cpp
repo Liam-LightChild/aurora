@@ -34,9 +34,9 @@ namespace aurora {
 	}
 
 	void Window::staticWindowSizeChanged([[maybe_unused]] GLFWwindow *pWindow, int pWidth, int pHeight) {
-		auto self = reinterpret_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+		auto self = reinterpret_cast<Window *>(glfwGetWindowUserPointer(pWindow));
 		global->getImpl()->updateViewportSize(pWidth, pHeight);
-		for(const auto &item : self->m_Framebuffers) {
+		for(const auto &item: self->m_Framebuffers) {
 			item->reinitialize(pWidth, pHeight);
 		}
 	}
@@ -57,7 +57,10 @@ namespace aurora {
 	glm::ivec2 Window::getSize() {
 		int w, h;
 		glfwGetWindowSize(m_Window, &w, &h);
-		return {w, h};
+		return {
+			w,
+			h
+		};
 	}
 
 	void Window::addFramebuffer(Framebuffer *pFramebuffer) {
@@ -65,6 +68,7 @@ namespace aurora {
 	}
 
 	void Window::removeFramebuffer(Framebuffer *pFramebuffer) {
-		m_Framebuffers.erase(std::remove(m_Framebuffers.begin(), m_Framebuffers.end(), pFramebuffer), m_Framebuffers.end());
+		m_Framebuffers.erase(std::remove(m_Framebuffers.begin(), m_Framebuffers.end(), pFramebuffer),
+		                     m_Framebuffers.end());
 	}
 }// namespace aurora

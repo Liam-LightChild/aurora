@@ -22,8 +22,8 @@ namespace aurora {
 	}
 
 	void Texture3D::setWrap(TextureWrapType pWrap, glm::vec3 pColor) {
-		if(pWrap != TextureWrapType::BorderColor) setWrap(pWrap);
-		else global->getImpl()->setTexture3DWrapPropertyBorder(m_Reference, pColor);
+		if(pWrap != TextureWrapType::BorderColor) { setWrap(pWrap); }
+		else { global->getImpl()->setTexture3DWrapPropertyBorder(m_Reference, pColor); }
 	}
 
 	void Texture3D::setFilters(TextureMinFilter pMin, TextureMagFilter pMag) {
@@ -33,6 +33,6 @@ namespace aurora {
 	void Texture3D::update(int pWidth, int pHeight, int pDepth, const uint8_t *pDataRgba, bool pUpdateMipmaps) {
 		auto i = global->getImpl();
 		i->updateTexture3DData(m_Reference, pWidth, pHeight, pDepth, pDataRgba);
-		if(pUpdateMipmaps) i->updateTexture3DMipmap(m_Reference);
+		if(pUpdateMipmaps) { i->updateTexture3DMipmap(m_Reference); }
 	}
 } // aurora

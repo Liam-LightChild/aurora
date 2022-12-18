@@ -15,6 +15,7 @@ namespace aurora {
 
 	public:
 		explicit Framebuffer(ObjRefBase *pReference) : m_Reference(pReference) {}
+
 		Framebuffer(int pWidth, int pHeight);
 		virtual ~Framebuffer();
 

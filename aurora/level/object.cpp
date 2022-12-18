@@ -11,7 +11,8 @@
 namespace aurora::level {
 	Object::Object(Level *pLevel, Object *pParent, const glm::dvec3 &pPosition, const glm::dquat &pRotation,
 	               std::string pName)
-		: m_Level(pLevel), m_Parent(pParent), m_Position(pPosition), m_Rotation(glm::normalize(pRotation)), m_Name(std::move(pName)) {
+		: m_Level(pLevel), m_Parent(pParent), m_Position(pPosition), m_Rotation(glm::normalize(pRotation)),
+		  m_Name(std::move(pName)) {
 		updateMatrix();
 	}
 
@@ -41,7 +42,7 @@ namespace aurora::level {
 		return m_Parent;
 	}
 
-	const std::unordered_map<std::string, Object*> &Object::getChildren() const {
+	const std::unordered_map<std::string, Object *> &Object::getChildren() const {
 		return m_Children;
 	}
 
@@ -54,7 +55,10 @@ namespace aurora::level {
 	}
 
 	void Object::addChild(Object *pObject) {
-		m_Children.insert({pObject->m_Name, pObject});
+		m_Children.insert({
+			                  pObject->m_Name,
+			                  pObject
+		                  });
 	}
 
 	const std::string &Object::getName() const {

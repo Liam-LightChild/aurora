@@ -12,21 +12,29 @@
 
 namespace aurora::level {
 	struct RegisteredController {
-		std::function<Controller *(Level*, Object*, const aether::Level::Controller &)> createFn;
+		std::function<Controller *(Level *, Object *, const aether::Level::Controller &)> createFn;
 		std::function<void(Controller *)> deleteFn;
 	};
 
 	std::unordered_map<std::string, RegisteredController> registeredControllers;
 
 	void registerController(const std::string &pType,
-	                        const std::function<Controller*(Level*, Object*, const aether::Level::Controller&)> &pConstruct,
-	                        const std::function<void(Controller*)> &pDelete) {
-		registeredControllers.insert({pType, {pConstruct, pDelete}});
+	                        const std::function<
+		                        Controller *(Level *, Object *, const aether::Level::Controller &)> &pConstruct,
+	                        const std::function<void(Controller *)> &pDelete) {
+		registeredControllers.insert({
+			                             pType,
+			                             {
+				                             pConstruct,
+				                             pDelete
+			                             }});
 	}
 
 	Controller *createController(Level *pLevel, Object *pObject, const aether::Level::Controller &pAether) {
-		if(registeredControllers.empty()) initializeRegistry();
-		if(!registeredControllers.contains(pAether.type)) throw std::runtime_error("Controller registry does not contain: " + pAether.type);
+		if(registeredControllers.empty()) { initializeRegistry(); }
+		if(!registeredControllers.contains(pAether.type)) {
+			throw std::runtime_error("Controller registry does not contain: " + pAether.type);
+		}
 		return registeredControllers.at(pAether.type).createFn(pLevel, pObject, pAether);
 	}
 

@@ -7,7 +7,7 @@
 #include "aurora/graphics/implementation.h"
 
 namespace aurora::shaders {
-	const VertexArrangement testA {
+	const VertexArrangement testA{
 		A_VNODE(v_position, Float, 3),
 		A_VNODE(v_color, Float, 3),
 		A_VNODE(v_texCoords, Float, 2)

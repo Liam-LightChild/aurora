@@ -13,28 +13,29 @@
 namespace aurora::level {
 
 	class Object;
+
 	class CameraController;
 
 	class Level {
 	private:
-		std::vector<Object*> m_Objects;
-		std::unordered_map<int, CameraController*> m_Cameras;
+		std::vector<Object *> m_Objects;
+		std::unordered_map<int, CameraController *> m_Cameras;
 		int m_CurrentCamera = -1;
 
 	public:
 		Level();
 		virtual ~Level();
 		explicit Level(const aether::Level &pAether);
-		Level(AssetLoader*, const std::filesystem::path &pPath, const std::string&);
+		Level(AssetLoader *, const std::filesystem::path &pPath, const std::string &);
 
-		[[nodiscard]] const std::vector<Object*> &getObjects() const {
+		[[nodiscard]] const std::vector<Object *> &getObjects() const {
 			return m_Objects;
 		}
 
 		virtual void render();
 		virtual void update();
 
-		virtual Framebuffer* renderCamera(int pCameraId);
+		virtual Framebuffer *renderCamera(int pCameraId);
 		int getCurrentCamera() const;
 		CameraController *getCurrentCameraController() const;
 		void setCurrentCamera(int pCurrentCamera);

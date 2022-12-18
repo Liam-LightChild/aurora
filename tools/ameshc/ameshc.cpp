@@ -64,7 +64,7 @@ void split3(const std::string &pString, std::string &p1, std::string &p2, std::s
 	p3 = pString.substr(secondSpace + 1);
 }
 
-int main(int pArgCount, char** pArgs) {
+int main(int pArgCount, char **pArgs) {
 	po::positional_options_description pd;
 	pd.add("input-file", 1);
 	po::options_description desc("Allowed options");
@@ -117,10 +117,10 @@ int main(int pArgCount, char** pArgs) {
 
 		auto begin = line.find_first_not_of(' ');
 		auto end = line.find_last_not_of(' ');
-		if(begin == end) continue;
+		if(begin == end) { continue; }
 		auto cmd = line.substr(begin, ++end - begin);
 
-		if(cmd.empty()) continue;
+		if(cmd.empty()) { continue; }
 		auto cmdBaseEnd = cmd.find_first_of(' ');
 
 		auto cmdBase = cmd.substr(0, cmdBaseEnd);
@@ -162,7 +162,7 @@ int main(int pArgCount, char** pArgs) {
 			tri.normalVertices[1] = std::stoi(bc) - 1;
 			tri.normalVertices[2] = std::stoi(cc) - 1;
 			mesh.tris.emplace_back(tri);
-		} else throw std::runtime_error("invalid OBJ directive: " + cmdBase);
+		} else { throw std::runtime_error("invalid OBJ directive: " + cmdBase); }
 	}
 
 	nlohmann::json::to_cbor(mesh.serialize(), out);

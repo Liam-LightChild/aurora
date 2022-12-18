@@ -11,8 +11,9 @@ namespace aurora::level {
 	MeshAssetController::MeshAssetController(Level *pLevel, Object *pObject,
 	                                         const aether::Level::Controller &pAether) : Controller(pLevel, pObject,
 	                                                                                                pAether) {
-		if(!pAether.properties.contains("AssetId"))
+		if(!pAether.properties.contains("AssetId")) {
 			throw std::runtime_error("AssetId must be provided on aurora:mesh");
+		}
 		m_Mesh = global->getAssetLoader()->load<aether::Mesh>(pAether.properties.at("AssetId"));
 	}
 
@@ -21,6 +22,7 @@ namespace aurora::level {
 	}
 
 	void MeshAssetController::render() {}
+
 	void MeshAssetController::update() {}
 
 	std::string MeshAssetController::getType() {

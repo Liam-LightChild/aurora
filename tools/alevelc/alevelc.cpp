@@ -57,10 +57,11 @@ using namespace xercesc;
 
 namespace po = boost::program_options;
 
-void parseControllers(DOMElement *pElement, const std::function<void(const aurora::aether::Level::Controller&)> &pInsert) {
+void
+parseControllers(DOMElement *pElement, const std::function<void(const aurora::aether::Level::Controller &)> &pInsert) {
 	auto elementNodes = pElement->getChildNodes();
 	for(int i = 0; i < elementNodes->getLength(); ++i) {
-		auto controller = dynamic_cast<DOMElement*>(elementNodes->item(i));
+		auto controller = dynamic_cast<DOMElement *>(elementNodes->item(i));
 		if(controller == nullptr) { continue; }
 
 		auto cont = aurora::aether::Level::Controller();
@@ -68,23 +69,27 @@ void parseControllers(DOMElement *pElement, const std::function<void(const auror
 
 		auto childNodes = controller->getChildNodes();
 		for(int j = 0; j < childNodes->getLength(); ++j) {
-			auto child = dynamic_cast<DOMElement*>(childNodes->item(j));
+			auto child = dynamic_cast<DOMElement *>(childNodes->item(j));
 			if(child == nullptr) { continue; }
 
 			auto nameStr = std::string(XMLString::transcode(child->getAttribute(XMLString::transcode("name"))));
 			auto valueStr = std::string(XMLString::transcode(child->getAttribute(XMLString::transcode("value"))));
 
-			cont.properties.insert({nameStr, valueStr});
+			cont.properties
+			    .insert({
+				            nameStr,
+				            valueStr
+			            });
 		}
 
 		pInsert(cont);
 	}
 }
 
-void parse(DOMElement *pElement, const std::function<void(const aurora::aether::Level::Object&)> &pInsert) {
+void parse(DOMElement *pElement, const std::function<void(const aurora::aether::Level::Object &)> &pInsert) {
 	auto elementNodes = pElement->getChildNodes();
 	for(int i = 0; i < elementNodes->getLength(); ++i) {
-		auto object = dynamic_cast<DOMElement*>(elementNodes->item(i));
+		auto object = dynamic_cast<DOMElement *>(elementNodes->item(i));
 		if(object == nullptr) { continue; }
 
 		auto obj = aurora::aether::Level::Object();
@@ -92,7 +97,7 @@ void parse(DOMElement *pElement, const std::function<void(const aurora::aether::
 
 		auto childNodes = object->getChildNodes();
 		for(int j = 0; j < childNodes->getLength(); ++j) {
-			auto child = dynamic_cast<DOMElement*>(childNodes->item(j));
+			auto child = dynamic_cast<DOMElement *>(childNodes->item(j));
 			if(child == nullptr) { continue; }
 
 			auto childNodeType = XMLString::transcode(child->getLocalName());
@@ -102,7 +107,11 @@ void parse(DOMElement *pElement, const std::function<void(const aurora::aether::
 				auto posX = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("x"))));
 				auto posY = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("y"))));
 				auto posZ = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("z"))));
-				obj.position = {posX, posY, posZ};
+				obj.position = {
+					posX,
+					posY,
+					posZ
+				};
 			} else if(childNodeTypeStr == "rotation") {
 				auto posX = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("yaw"))));
 				auto posY = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("pitch"))));
@@ -117,10 +126,19 @@ void parse(DOMElement *pElement, const std::function<void(const aurora::aether::
 				auto posX = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("x"))));
 				auto posY = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("y"))));
 				auto posZ = std::stod(XMLString::transcode(child->getAttribute(XMLString::transcode("z"))));
-				obj.rotation = {posW, posX, posY, posZ};
+				obj.rotation = {
+					posW,
+					posX,
+					posY,
+					posZ
+				};
 			} else if(childNodeTypeStr == "children") {
 				parse(child, [&obj](const aurora::aether::Level::Object &pObj) {
-					obj.objects.insert({pObj.name, pObj});
+					obj.objects
+					   .insert({
+						           pObj.name,
+						           pObj
+					           });
 				});
 			} else if(childNodeTypeStr == "controllers") {
 				parseControllers(child, [&obj](const aurora::aether::Level::Controller &pCont) {
@@ -191,7 +209,11 @@ int main(int pArgCount, char **pArgs) {
 	level.id = XMLString::transcode(element->getAttributeNS(aetherNs, XMLString::transcode("id")));
 
 	parse(element, [&level](const aurora::aether::Level::Object &pObj) {
-		level.objects.insert({pObj.name, pObj});
+		level.objects
+		     .insert({
+			             pObj.name,
+			             pObj
+		             });
 	});
 
 	auto outPath = std::filesystem::path(outputPath);

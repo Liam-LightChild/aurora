@@ -20,9 +20,9 @@ namespace aurora {
 		explicit Buffer(BufferType pType);
 		virtual ~Buffer();
 
-		virtual void update(void* pData, size_t pSize);
-		virtual void update(void* pData, size_t pSize, size_t pOffset);
-		virtual void retrieve(void* pData, size_t pSize, size_t pOffset);
+		virtual void update(void *pData, size_t pSize);
+		virtual void update(void *pData, size_t pSize, size_t pOffset);
+		virtual void retrieve(void *pData, size_t pSize, size_t pOffset);
 
 		ObjRefBase *getReference() const {
 			return m_Reference;

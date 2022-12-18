@@ -21,6 +21,7 @@ namespace aurora::level {
 	public:
 		Controller(Level *pLevel, Object *pObject, const aether::Level::Controller &pAether)
 			: level(pLevel), object(pObject) {}
+
 		virtual ~Controller() = default;
 
 		virtual void render() = 0;
@@ -42,6 +43,7 @@ namespace aurora::level {
 		~CameraController() override;
 
 		virtual void preRender() {}
+
 		virtual void postRender() {}
 
 		[[nodiscard]] const glm::mat4 &getViewMatrix() const {

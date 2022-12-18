@@ -16,13 +16,13 @@
 namespace aurora {
 	class AssetLoader {
 		struct Ref {
-			void* ptr;
+			void *ptr;
 			int refs;
 		};
 
 		std::unordered_map<std::string, std::filesystem::path> m_Index;
-		std::unordered_map<std::string, Ref*> m_Refs;
-		std::unordered_map<void*, Ref*> m_RefsByPtr;
+		std::unordered_map<std::string, Ref *> m_Refs;
+		std::unordered_map<void *, Ref *> m_RefsByPtr;
 
 	public:
 		explicit AssetLoader(const std::filesystem::path &pPath);
@@ -32,11 +32,11 @@ namespace aurora {
 			if(m_Refs.contains(pAssetId)) {
 				auto ref = m_Refs[pAssetId];
 				ref->refs++;
-				return reinterpret_cast<T*>(ref->ptr);
+				return reinterpret_cast<T *>(ref->ptr);
 			} else {
-				T* ptr = new T(this, m_Index[pAssetId], pAssetId);
+				T *ptr = new T(this, m_Index[pAssetId], pAssetId);
 
-				auto r = new Ref {
+				auto r = new Ref{
 					.ptr = ptr,
 					.refs = 1
 				};
@@ -52,8 +52,11 @@ namespace aurora {
 		T *tryLoad(const std::string &pAssetId, const std::string &pDefaultAssetId = T::missingAssetName) {
 			try {
 				return load<T>(pAssetId);
-			} catch (const std::runtime_error &e) {
-				BOOST_LOG_TRIVIAL(error) << "Failed to load asset " << pAssetId << "; defaulting to " << pDefaultAssetId;
+			} catch(const std::runtime_error &e) {
+				BOOST_LOG_TRIVIAL(error) << "Failed to load asset "
+				                         << pAssetId
+				                         << "; defaulting to "
+				                         << pDefaultAssetId;
 				return load<T>(pDefaultAssetId);
 			}
 		}
@@ -66,12 +69,12 @@ namespace aurora {
 		 * @tparam T Required due to delete restrictions.
 		 */
 		template<typename T>
-		bool unload(void* pPointer) {
-			if(!m_RefsByPtr.contains(pPointer)) return false;
+		bool unload(void *pPointer) {
+			if(!m_RefsByPtr.contains(pPointer)) { return false; }
 			auto ref = m_RefsByPtr[pPointer];
 
 			if(ref->refs != -1 && --ref->refs <= 0) {
-				delete reinterpret_cast<T*>(ref->ptr);
+				delete reinterpret_cast<T *>(ref->ptr);
 				delete ref;
 				return false;
 			} else {
@@ -80,8 +83,8 @@ namespace aurora {
 		}
 
 		template<typename T>
-		void inject(const std::string &pAssetId, T* pPointer) {
-			auto r = new Ref {
+		void inject(const std::string &pAssetId, T *pPointer) {
+			auto r = new Ref{
 				.ptr = pPointer,
 				.refs = -1
 			};

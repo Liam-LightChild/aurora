@@ -20,9 +20,9 @@ namespace aurora::level {
 
 		if(pAether.properties.contains("ClearColor")) {
 			auto i = std::stoi(pAether.properties.at("ClearColor"), nullptr, 16);
-			m_ClearColor.r = (float)((i & 0xFF0000) >> 16) / 256.f;
-			m_ClearColor.g = (float)((i & 0x00FF00) >> 8) / 256.f;
-			m_ClearColor.b = (float)(i & 0x0000FF) / 256.f;
+			m_ClearColor.r = (float) ((i & 0xFF0000) >> 16) / 256.f;
+			m_ClearColor.g = (float) ((i & 0x00FF00) >> 8) / 256.f;
+			m_ClearColor.b = (float) (i & 0x0000FF) / 256.f;
 		}
 
 		updateMatrices();
@@ -47,7 +47,7 @@ namespace aurora::level {
 	void Camera3DController::updateMatrices() {
 		auto wSize = global->getWindow()->getSize();
 		auto height = m_Scale;
-		auto width = ((float)wSize.x / (float)wSize.y) * m_Scale;
+		auto width = ((float) wSize.x / (float) wSize.y) * m_Scale;
 		setPerspectiveMatrix(glm::perspectiveFov(m_FieldOfView, width, height, 0.001f, 100.f));
 		setViewMatrix(glm::inverse(object->getObjectMatrix()));
 

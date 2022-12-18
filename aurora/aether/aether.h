@@ -124,7 +124,7 @@ namespace aurora::aether {
 
 		static inline Shader load(const std::filesystem::path &pPath) { return Shader(readFromFile(pPath)); }
 
-		explicit Shader(class AssetLoader*, const std::filesystem::path &pPath, const std::string&)
+		explicit Shader(class AssetLoader *, const std::filesystem::path &pPath, const std::string &)
 			: Shader(readFromFile(pPath)) {}
 
 		nlohmann::json serialize() override {
@@ -147,36 +147,36 @@ namespace aurora::aether {
 				}
 
 				p.emplace_back(nlohmann::json::object({
-					{"stage",  stage},
-					{"src", item.source}
-				}));
+					                                      {"stage", stage},
+					                                      {"src",   item.source}
+				                                      }));
 			}
 
 			for(const auto &item: inputs) {
 				i.emplace_back(nlohmann::json::object({
-					{"name",    item.name},
-					{"purpose", item.purpose}
-				}));
+					                                      {"name",    item.name},
+					                                      {"purpose", item.purpose}
+				                                      }));
 			}
 			for(const auto &item: outputs) {
 				o.emplace_back(nlohmann::json::object({
-					{"name",  item.name},
-					{"color", item.color}
-				}));
+					                                      {"name",  item.name},
+					                                      {"color", item.color}
+				                                      }));
 			}
 			for(const auto &item: uniforms) {
 				u.emplace_back(nlohmann::json::object({
-					{"name",    item.name},
-					{"purpose", item.purpose}
-				}));
+					                                      {"name",    item.name},
+					                                      {"purpose", item.purpose}
+				                                      }));
 			}
 			for(const auto &item: vertexNodes) {
 				v.emplace_back(nlohmann::json::object({
-					{"name",    item.name},
-					{"type",    item.type},
-					{"from",    item.from},
-					{"size",    item.size}
-				}));
+					                                      {"name", item.name},
+					                                      {"type", item.type},
+					                                      {"from", item.from},
+					                                      {"size", item.size}
+				                                      }));
 			}
 
 			j["parts"] = p;
@@ -195,26 +195,33 @@ namespace aurora::aether {
 		TextureMinFilter minFilter = TextureMinFilter::Linear;
 		TextureMagFilter magFilter = TextureMagFilter::Linear;
 		TextureWrapType wrap = TextureWrapType::Repeat;
-		glm::vec3 borderColor = {0, 0, 0};
+		glm::vec3 borderColor = {
+			0,
+			0,
+			0
+		};
 
 	private:
 		[[nodiscard]] inline TextureMinFilter parseMinFilter(const std::string &pString) const {
-			if(pString == "linear") return useMipmap ? TextureMinFilter::Linear : TextureMinFilter::LinearMipmap;
-			else if(pString == "nearest") return useMipmap ? TextureMinFilter::Nearest : TextureMinFilter::NearestMipmap;
-			else throw std::runtime_error("invalid min filter " + pString);
+			if(pString == "linear") { return useMipmap ? TextureMinFilter::Linear : TextureMinFilter::LinearMipmap; }
+			else if(pString == "nearest") {
+				return useMipmap
+				       ? TextureMinFilter::Nearest
+				       : TextureMinFilter::NearestMipmap;
+			} else { throw std::runtime_error("invalid min filter " + pString); }
 		}
 
 		[[nodiscard]] static inline TextureMagFilter parseMagFilter(const std::string &pString) {
-			if(pString == "linear") return TextureMagFilter::Linear;
-			else if(pString == "nearest") return TextureMagFilter::Nearest;
-			else throw std::runtime_error("invalid mag filter " + pString);
+			if(pString == "linear") { return TextureMagFilter::Linear; }
+			else if(pString == "nearest") { return TextureMagFilter::Nearest; }
+			else { throw std::runtime_error("invalid mag filter " + pString); }
 		}
 
 		[[nodiscard]] static inline TextureWrapType parseWrapType(const std::string &pString) {
-			if(pString == "repeat") return TextureWrapType::Repeat;
-			else if(pString == "border") return TextureWrapType::BorderColor;
-			else if(pString == "clamp_to_edge") return TextureWrapType::ClampToEdge;
-			else throw std::runtime_error("invalid wrap type " + pString);
+			if(pString == "repeat") { return TextureWrapType::Repeat; }
+			else if(pString == "border") { return TextureWrapType::BorderColor; }
+			else if(pString == "clamp_to_edge") { return TextureWrapType::ClampToEdge; }
+			else { throw std::runtime_error("invalid wrap type " + pString); }
 		}
 
 	public:
@@ -224,16 +231,22 @@ namespace aurora::aether {
 		explicit TextureMeta(const nlohmann::json &pJson) : Resource(pJson) {
 			path = pJson["path"];
 
-			if(pJson.contains("mipmap")) useMipmap = pJson["mipmap"];
+			if(pJson.contains("mipmap")) { useMipmap = pJson["mipmap"]; }
 
 			if(pJson.contains("filter")) {
 				auto f = pJson["filter"];
-				if(f.contains("min")) minFilter = parseMinFilter(f["min"]);
-				if(f.contains("mag")) magFilter = parseMagFilter(f["mag"]);
+				if(f.contains("min")) { minFilter = parseMinFilter(f["min"]); }
+				if(f.contains("mag")) { magFilter = parseMagFilter(f["mag"]); }
 			}
 
-			if(pJson.contains("wrap")) wrap = parseWrapType(pJson["wrap"]);
-			if(pJson.contains("border_color")) borderColor = {pJson["r"], pJson["g"], pJson["b"]};
+			if(pJson.contains("wrap")) { wrap = parseWrapType(pJson["wrap"]); }
+			if(pJson.contains("border_color")) {
+				borderColor = {
+					pJson["r"],
+					pJson["g"],
+					pJson["b"]
+				};
+			}
 		}
 
 		~TextureMeta() override = default;
@@ -241,22 +254,23 @@ namespace aurora::aether {
 		nlohmann::json serialize() override {
 			auto j = Resource::serialize();
 			j["path"] = path;
-			if ((minFilter != TextureMinFilter::Linear && minFilter != TextureMinFilter::LinearMipmap) || magFilter != TextureMagFilter::Linear) {
+			if((minFilter != TextureMinFilter::Linear && minFilter != TextureMinFilter::LinearMipmap) ||
+			   magFilter != TextureMagFilter::Linear) {
 				auto f = nlohmann::json::object();
-				if(minFilter != TextureMinFilter::Linear && minFilter != TextureMinFilter::LinearMipmap)
+				if(minFilter != TextureMinFilter::Linear && minFilter != TextureMinFilter::LinearMipmap) {
 					f["min"] = "nearest";
-				if(magFilter != TextureMagFilter::Linear)
+				}
+				if(magFilter != TextureMagFilter::Linear) {
 					f["mag"] = "nearest";
+				}
 				j["filter"] = f;
 			}
 
 			if(wrap != TextureWrapType::Repeat) {
 				switch(wrap) {
-					case TextureWrapType::ClampToEdge:
-						j["wrap"] = "clamp_to_edge";
+					case TextureWrapType::ClampToEdge: j["wrap"] = "clamp_to_edge";
 						break;
-					case TextureWrapType::BorderColor:
-						j["wrap"] = "border";
+					case TextureWrapType::BorderColor: j["wrap"] = "border";
 						j["border_color"] = {
 							{"r", borderColor.r},
 							{"g", borderColor.g},
@@ -267,7 +281,7 @@ namespace aurora::aether {
 				}
 			}
 
-			if(useMipmap) j["mipmap"] = useMipmap;
+			if(useMipmap) { j["mipmap"] = useMipmap; }
 
 			return j;
 		}
@@ -313,7 +327,7 @@ namespace aurora::aether {
 			}
 		}
 
-		Mesh(AssetLoader*, const std::filesystem::path &pPath, const std::string&)
+		Mesh(AssetLoader *, const std::filesystem::path &pPath, const std::string &)
 			: Mesh(nlohmann::json::from_cbor(std::ifstream(pPath))) {}
 
 		~Mesh() override = default;
@@ -325,16 +339,39 @@ namespace aurora::aether {
 			auto n = nlohmann::json::array();
 			auto ta = nlohmann::json::array();
 
-			for(const auto &item: positions) p.emplace_back(nlohmann::json::array({item.x, item.y, item.z}));
-			for(const auto &item: texCoords) t.emplace_back(nlohmann::json::array({item.x, item.y}));
-			for(const auto &item: normals) n.emplace_back(nlohmann::json::array({item.x, item.y, item.z}));
+			for(const auto &item: positions) {
+				p.emplace_back(nlohmann::json::array({
+					                                     item.x,
+					                                     item.y,
+					                                     item.z
+				                                     }));
+			}
+			for(const auto &item: texCoords) {
+				t.emplace_back(nlohmann::json::array({
+					                                     item.x,
+					                                     item.y
+				                                     }));
+			}
+			for(const auto &item: normals) {
+				n.emplace_back(nlohmann::json::array({
+					                                     item.x,
+					                                     item.y,
+					                                     item.z
+				                                     }));
+			}
 
 			for(const auto &item: tris) {
 				ta.emplace_back(nlohmann::json::array({
-					item.vertices[0], item.texVertices[0], item.normalVertices[0],
-					item.vertices[1], item.texVertices[1], item.normalVertices[1],
-					item.vertices[2], item.texVertices[2], item.normalVertices[2],
-				}));
+					                                      item.vertices[0],
+					                                      item.texVertices[0],
+					                                      item.normalVertices[0],
+					                                      item.vertices[1],
+					                                      item.texVertices[1],
+					                                      item.normalVertices[1],
+					                                      item.vertices[2],
+					                                      item.texVertices[2],
+					                                      item.normalVertices[2],
+				                                      }));
 			}
 
 			j[".p"] = p;
@@ -353,7 +390,12 @@ namespace aurora::aether {
 		OptimisedMesh(const std::vector<float> &pVertexData, const std::vector<uint32_t> &pIndexData) : vertexData(
 			pVertexData), indexData(pIndexData) {}
 
-		OptimisedMesh(const Mesh &pMesh, const Shader &pShader, const glm::vec4 &pColor = {1, 1, 1, 1}) {
+		OptimisedMesh(const Mesh &pMesh, const Shader &pShader, const glm::vec4 &pColor = {
+			1,
+			1,
+			1,
+			1
+		}) {
 			struct Vertex {
 				glm::vec3 position;
 				glm::vec2 texCoord;
@@ -377,8 +419,8 @@ namespace aurora::aether {
 			for(const auto &item: pMesh.tris) {
 				for(int i = 0; i < 3; ++i) {
 					auto vtx = Vertex(pMesh.positions[item.vertices[i]],
-									  pMesh.texCoords[item.texVertices[i]],
-									  pMesh.normals[item.normalVertices[i]]);
+					                  pMesh.texCoords[item.texVertices[i]],
+					                  pMesh.normals[item.normalVertices[i]]);
 					auto iter = vertices.begin(), end = vertices.end();
 
 					bool done = false;
@@ -393,7 +435,7 @@ namespace aurora::aether {
 
 					if(!done) {
 						vertices.emplace_back(vtx);
-						indexData.emplace_back((uint32_t)vertices.size() - 1);
+						indexData.emplace_back((uint32_t) vertices.size() - 1);
 					}
 				}
 			}
@@ -429,7 +471,7 @@ namespace aurora::aether {
 						vertexData.emplace_back(item.texCoord.s);
 						vertexData.emplace_back(item.texCoord.t);
 						vertexData.emplace_back(item.texCoord.r);
-					} else throw std::runtime_error("Unsupported mesh input value " + node.from);
+					} else { throw std::runtime_error("Unsupported mesh input value " + node.from); }
 				}
 			}
 		}
@@ -448,7 +490,10 @@ namespace aurora::aether {
 				type = pJson["type"];
 
 				for(const auto &[key, value]: pJson["properties"].items()) {
-					properties.insert({key, value});
+					properties.insert({
+						                  key,
+						                  value
+					                  });
 				}
 			}
 
@@ -478,13 +523,25 @@ namespace aurora::aether {
 			explicit Object(const nlohmann::json &pJson) {
 				name = pJson["name"];
 				auto pos = pJson["pos"], rot = pJson["rot"];
-				position = {pos[0], pos[1], pos[2]};
-				rotation = {rot[0], rot[1], rot[2], rot[3]};
+				position = {
+					pos[0],
+					pos[1],
+					pos[2]
+				};
+				rotation = {
+					rot[0],
+					rot[1],
+					rot[2],
+					rot[3]
+				};
 
 				if(pJson.contains("children")) {
 					for(const auto &item: pJson["children"]) {
 						Object obj(item);
-						objects.insert({obj.name, obj});
+						objects.insert({
+							               obj.name,
+							               obj
+						               });
 					}
 				}
 
@@ -498,8 +555,17 @@ namespace aurora::aether {
 			nlohmann::json serialize() const {
 				nlohmann::json j;
 				j["name"] = name;
-				j["pos"] = {position.x, position.y, position.z};
-				j["rot"] = {rotation.w, rotation.x, rotation.y, rotation.z};
+				j["pos"] = {
+					position.x,
+					position.y,
+					position.z
+				};
+				j["rot"] = {
+					rotation.w,
+					rotation.x,
+					rotation.y,
+					rotation.z
+				};
 
 				auto children = nlohmann::json::array();
 				auto controllerList = nlohmann::json::array();
@@ -526,7 +592,10 @@ namespace aurora::aether {
 			if(pJson.contains("root")) {
 				for(const auto &item: pJson["root"]) {
 					Object obj(item);
-					objects.insert({obj.name, obj});
+					objects.insert({
+						               obj.name,
+						               obj
+					               });
 				}
 			}
 		}

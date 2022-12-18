@@ -25,7 +25,7 @@ public:
 };
 
 int main() {
-	MainApplication* a = nullptr;
+	MainApplication *a = nullptr;
 	try {
 		a = new MainApplication;
 		a->run();

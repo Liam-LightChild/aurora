@@ -11,12 +11,15 @@
 
 namespace aurora::level {
 	class Controller;
+
 	class Level;
+
 	class Object;
 
 	void registerController(const std::string &pType,
-							const std::function<Controller*(Level*, Object*, const aether::Level::Controller&)> &pConstruct,
-							const std::function<void(Controller*)> &pDelete);
+	                        const std::function<
+		                        Controller *(Level *, Object *, const aether::Level::Controller &)> &pConstruct,
+	                        const std::function<void(Controller *)> &pDelete);
 	Controller *createController(Level *pLevel, Object *pObject, const aether::Level::Controller &pAether);
 	void deleteController(Controller *pController);
 
@@ -25,7 +28,7 @@ namespace aurora::level {
 		registerController(T::type, [](Level *pLevel, Object *pObject, const aether::Level::Controller &pAether) {
 			return new T(pLevel, pObject, pAether);
 		}, [](Controller *pPointer) {
-			delete dynamic_cast<T*>(pPointer);
+			delete dynamic_cast<T *>(pPointer);
 		});
 	}
 

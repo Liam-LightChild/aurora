@@ -56,7 +56,7 @@ namespace aurora::level {
 		}
 	}
 
-	Framebuffer* Level::renderCamera(int pCameraId) {
+	Framebuffer *Level::renderCamera(int pCameraId) {
 		auto cont = m_Cameras.at(pCameraId);
 		auto i = global->getImpl();
 		auto f = cont->getCurrentFramebuffer();
@@ -81,7 +81,10 @@ namespace aurora::level {
 	}
 
 	void Level::registerCamera(int pId, CameraController *pController) {
-		m_Cameras.insert({pId, pController});
+		m_Cameras.insert({
+			                 pId,
+			                 pController
+		                 });
 	}
 
 	void Level::unregisterCamera(int pId) {

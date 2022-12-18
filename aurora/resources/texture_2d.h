@@ -21,7 +21,7 @@ namespace aurora {
 
 		explicit Texture2D(ObjRefBase *pReference);
 		Texture2D();
-		Texture2D(AssetLoader* pAssetLoader, const std::filesystem::path &pPath, const std::string &pAssetId);
+		Texture2D(AssetLoader *pAssetLoader, const std::filesystem::path &pPath, const std::string &pAssetId);
 		virtual ~Texture2D();
 
 		void setWrap(TextureWrapType pWrap);

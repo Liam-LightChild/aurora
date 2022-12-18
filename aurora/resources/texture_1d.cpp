@@ -22,8 +22,8 @@ namespace aurora {
 	}
 
 	void Texture1D::setWrap(TextureWrapType pWrap, glm::vec3 pColor) {
-		if(pWrap != TextureWrapType::BorderColor) setWrap(pWrap);
-		else global->getImpl()->setTexture2DWrapPropertyBorder(m_Reference, pColor);
+		if(pWrap != TextureWrapType::BorderColor) { setWrap(pWrap); }
+		else { global->getImpl()->setTexture2DWrapPropertyBorder(m_Reference, pColor); }
 	}
 
 	void Texture1D::setFilters(TextureMinFilter pMin, TextureMagFilter pMag) {
@@ -33,7 +33,7 @@ namespace aurora {
 	void Texture1D::update(int pWidth, const uint8_t *pDataRgba, bool pUpdateMipmaps) {
 		auto i = global->getImpl();
 		i->updateTexture1DData(m_Reference, pWidth, pDataRgba);
-		if(pUpdateMipmaps) i->updateTexture1DMipmap(m_Reference);
+		if(pUpdateMipmaps) { i->updateTexture1DMipmap(m_Reference); }
 	}
 
 	void Texture1D::updateMipmaps() {

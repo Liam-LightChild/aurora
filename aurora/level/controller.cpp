@@ -13,7 +13,7 @@ aurora::level::CameraController::CameraController(aurora::level::Level *pLevel, 
 	auto size = global->getWindow()->getSize();
 	m_Framebuffers[0] = new Framebuffer(size.x, size.y);
 	m_Framebuffers[1] = new Framebuffer(size.x, size.y);
-	if(!pAether.properties.contains("CameraId")) throw std::runtime_error("camera controller needs id");
+	if(!pAether.properties.contains("CameraId")) { throw std::runtime_error("camera controller needs id"); }
 	m_Id = std::stoi(pAether.properties.at("CameraId"));
 	pLevel->registerCamera(m_Id, this);
 }

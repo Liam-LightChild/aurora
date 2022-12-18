@@ -1,6 +1,6 @@
-<schema xmlns="http://www.w3.org/2001/XMLSchema"
-        xmlns:aether="https://www.liamcoalstudio.com/aurora/aether.xsd"
+<schema xmlns:aether="https://www.liamcoalstudio.com/aurora/aether.xsd"
         xmlns:lvl="https://www.liamcoalstudio.com/aurora/alvl.xsd"
+        xmlns="http://www.w3.org/2001/XMLSchema"
         targetNamespace="https://www.liamcoalstudio.com/aurora/alvl.xsd"
         elementFormDefault="qualified">
     <import namespace="https://www.liamcoalstudio.com/aurora/aether.xsd" schemaLocation="aether.xsd"/>

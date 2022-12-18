@@ -22,8 +22,8 @@ namespace aurora {
 	}
 
 	void Texture2D::setWrap(TextureWrapType pWrap, glm::vec3 pColor) {
-		if(pWrap != TextureWrapType::BorderColor) setWrap(pWrap);
-		else global->getImpl()->setTexture2DWrapPropertyBorder(m_Reference, pColor);
+		if(pWrap != TextureWrapType::BorderColor) { setWrap(pWrap); }
+		else { global->getImpl()->setTexture2DWrapPropertyBorder(m_Reference, pColor); }
 	}
 
 	void Texture2D::setFilters(TextureMinFilter pMin, TextureMagFilter pMag) {
@@ -33,15 +33,15 @@ namespace aurora {
 	void Texture2D::update(const sail::image &pImage, bool pUpdateMipmaps) {
 		auto i = global->getImpl();
 		i->updateTexture2DData(m_Reference, pImage);
-		if(pUpdateMipmaps) i->updateTexture2DMipmap(m_Reference);
+		if(pUpdateMipmaps) { i->updateTexture2DMipmap(m_Reference); }
 	}
 
 	void Texture2D::updateMipmaps() {
 		global->getImpl()->updateTexture2DMipmap(m_Reference);
 	}
 
-	Texture2D::Texture2D(AssetLoader*, const std::filesystem::path &pPath, const std::string &pAssetId) : Texture2D() {
-		if(!exists(pPath)) throw std::runtime_error("Asset " + pAssetId + ": cannot find " + pPath.string());
+	Texture2D::Texture2D(AssetLoader *, const std::filesystem::path &pPath, const std::string &pAssetId) : Texture2D() {
+		if(!exists(pPath)) { throw std::runtime_error("Asset " + pAssetId + ": cannot find " + pPath.string()); }
 
 		sail::image img;
 		auto absPath = absolute(pPath);
@@ -49,8 +49,8 @@ namespace aurora {
 		auto texPath = absPath.parent_path() / meta.path;
 		img.load(absolute(texPath).string());
 
-		if(meta.wrap == TextureWrapType::BorderColor) setWrap(meta.wrap, meta.borderColor);
-		else setWrap(meta.wrap);
+		if(meta.wrap == TextureWrapType::BorderColor) { setWrap(meta.wrap, meta.borderColor); }
+		else { setWrap(meta.wrap); }
 		setFilters(meta.minFilter, meta.magFilter);
 		update(img, meta.useMipmap);
 	}
@@ -58,7 +58,7 @@ namespace aurora {
 	void Texture2D::update(int pWidth, int pHeight, const uint8_t *pDataRgba, bool pUpdateMipmaps) {
 		auto i = global->getImpl();
 		i->updateTexture2DData(m_Reference, pWidth, pHeight, pDataRgba);
-		if(pUpdateMipmaps) i->updateTexture2DMipmap(m_Reference);
+		if(pUpdateMipmaps) { i->updateTexture2DMipmap(m_Reference); }
 	}
 
 	const std::string Texture2D::missingAssetName = "aurora:_internal/missing.texture";

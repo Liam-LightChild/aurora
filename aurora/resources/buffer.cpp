@@ -8,6 +8,7 @@
 
 namespace aurora {
 	Buffer::Buffer(ObjRefBase *pReference) : m_Reference(pReference) {}
+
 	Buffer::Buffer(BufferType pType) : Buffer(global->getImpl()->createBuffer(pType)) {}
 
 	Buffer::~Buffer() {

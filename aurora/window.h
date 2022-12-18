@@ -17,7 +17,7 @@ namespace aurora {
 	class Window {
 		GLFWwindow *m_Window;
 		std::string m_Title;
-		std::vector<Framebuffer*> m_Framebuffers;
+		std::vector<Framebuffer *> m_Framebuffers;
 
 	public:
 		Window(int pWidth, int pHeight, const std::string &pTitle, bool pIsFullscreen);

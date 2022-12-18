@@ -175,8 +175,8 @@ namespace aurora {
 		ObjRefBase *getFramebufferColorTexture2D(ObjRefBase *pObject) override;
 		ObjRefBase *getFramebufferDepthStencilTexture2D(ObjRefBase *pObject) override;
 		void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) override;
-		void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pStartX, int pStartY, int pWidth,
-		                            int pHeight) override;
+		void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pSourceStartX, int pSourceStartY,
+		                            int pTargetStartX, int pTargetStartY, int pWidth, int pHeight) override;
 		ObjRefBase *getDefaultFramebuffer() override;
 		void activateFramebuffer(ObjRefBase *pObject) override;
 	};

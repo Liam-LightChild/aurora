@@ -708,11 +708,12 @@ namespace aurora {
 		 * Copys part of the data from one framebuffer to another. This expects that
 		 * pSource and pTarget are at least (pStartX+pWidth)x(pStartY+pHeight) in size.
 		 *
-		 * @todo This function should have pStartX and pStartY for both pSource and pTarget.
 		 * @param pSource The source of the copy. The default framebuffer <b>cannot</b> be passed here.
 		 * @param pTarget The target of the copy. The default framebuffer can be passed here.
-		 * @param pStartX The X value (in pixels) to copy from and to.
-		 * @param pStartY The Y value (in pixels) to copy from and to.
+		 * @param pSourceStartX The X value (in pixels) to copy from.
+		 * @param pSourceStartY The Y value (in pixels) to copy from.
+		 * @param pTargetStartX The X value (in pixels) to copy to.
+		 * @param pTargetStartY The Y value (in pixels) to copy to.
 		 * @param pWidth The width of the segment to copy, in pixels.
 		 * @param pHeight The height of the segment to copy, in pixels.
 		 * @throws EInvalidRef The reference does not refer to a framebuffer.
@@ -720,8 +721,8 @@ namespace aurora {
 		 * @throws std::runtime_error Possible implementation-dependent errors.
 		 */
 		virtual void
-		performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pStartX, int pStartY, int pWidth,
-		                       int pHeight) = 0;
+		performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pSourceStartX, int pSourceStartY,
+		                       int pTargetStartX, int pTargetStartY, int pWidth, int pHeight) = 0;
 
 		/**
 		 * Gets a reference that can be passed to represent the default framebuffer

@@ -848,8 +848,10 @@ namespace aurora {
 		}
 	}
 
-	void OpenGLImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pStartX,
-	                                                        int pStartY, int pWidth, int pHeight) {
+	void OpenGLImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pSourceStartX,
+	                                                        int pSourceStartY,
+	                                                        int pTargetStartX, int pTargetStartY, int pWidth,
+	                                                        int pHeight) {
 		auto refs = dynamic_cast<FramebufferReference *>(pSource);
 		if(refs == nullptr) { throw EInvalidRef("invalid framebuffer reference"); }
 
@@ -857,13 +859,13 @@ namespace aurora {
 
 		if(dynamic_cast<DefaultFramebufferReference *>(pTarget)) {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-			glBlitFramebuffer(pStartX, pStartX, pWidth, pHeight, 0, 0, refs->width, refs->height,
+			glBlitFramebuffer(pSourceStartX, pSourceStartX, pWidth, pHeight, pTargetStartX, pTargetStartY, pWidth, pHeight,
 			                  GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 		} else {
 			auto reft = dynamic_cast<FramebufferReference *>(pTarget);
 			if(reft == nullptr) { throw std::runtime_error("invalid framebuffer reference"); }
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, reft->resource);
-			glBlitFramebuffer(pStartX, pStartX, pWidth, pHeight, 0, 0, reft->width, reft->height,
+			glBlitFramebuffer(pSourceStartX, pSourceStartX, pWidth, pHeight, pTargetStartX, pTargetStartY, pWidth, pHeight,
 			                  GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 		}
 	}

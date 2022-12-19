@@ -8,7 +8,8 @@ private:
 	aurora::level::Level *m_Level;
 
 public:
-	MainApplication() : m_Level(getInstance()->getAssetLoader()->load<aurora::level::Level>("test:test.level")) {
+	MainApplication() : m_Level(getInstance()->getAssetLoader()->load<aurora::level::Level>("test:test.level")),
+	                    Application(800, 600, "Test") {
 		m_Level->setCurrentCamera(1);
 		setLevel(m_Level);
 	}

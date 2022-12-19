@@ -9,7 +9,7 @@
 #include <thread>
 
 namespace aurora {
-	Application::Application() {
+	Application::Application(int pWindowWidth, int pWindowHeight, const std::string &pWindowTitle) {
 		init();
 		auto implFinder = new aurora::ImplementationFinder();
 		implFinder->registerImpl(new aurora::OpenGlImplementationNode<3, 2>);
@@ -17,7 +17,7 @@ namespace aurora {
 		m_Instance = new aurora::Instance(implFinder, ".");
 		aurora::global = m_Instance;
 
-		m_Window = new aurora::Window(800, 600, "Title", false);
+		m_Window = new aurora::Window(pWindowWidth, pWindowHeight, pWindowTitle, false);
 		m_Instance->setWindow(m_Window);
 
 		aurora::injectBuiltinAssets(m_Instance->getAssetLoader());

@@ -28,7 +28,7 @@ namespace aurora {
 		}
 
 	public:
-		Application();
+		Application(int pWindowWidth, int pWindowHeight, const std::string &pWindowTitle);
 		virtual ~Application();
 
 		virtual void render();

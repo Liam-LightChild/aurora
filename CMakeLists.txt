@@ -15,10 +15,7 @@ find_package(Boost REQUIRED COMPONENTS log program_options)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(SailC++ CONFIG REQUIRED)
 
-add_library(aether STATIC aurora/aether/aether.cpp aurora/aether/aether.h aurora/aether/a_shader.cpp aurora/aether/a_texture.cpp aurora/aether/a_mesh.cpp aurora/aether/a_opt_mesh.cpp aurora/aether/a_level_controller.cpp aurora/aether/a_level_object.cpp aurora/aether/a_level.cpp)
-target_include_directories(aether PUBLIC .)
-target_link_libraries(aether PUBLIC glm::glm nlohmann_json::nlohmann_json)
-
+add_subdirectory(aurora/aether)
 add_subdirectory(tools)
 
 set(GEN_SOURCES)

@@ -45,6 +45,8 @@ namespace aurora::level {
 	}
 
 	void Camera3DController::updateMatrices() {
+		if(!global->getWindow()->isReallyVisible()) return;
+
 		auto wSize = global->getWindow()->getSize();
 		auto height = m_Scale;
 		auto width = ((float) wSize.x / (float) wSize.y) * m_Scale;

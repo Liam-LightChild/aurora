@@ -6,15 +6,21 @@
 class MainApplication : public aurora::Application {
 private:
 	aurora::level::Level *m_Level;
+	aurora::Icon *m_WindowIcon;
 
 public:
-	MainApplication() : m_Level(getInstance()->getAssetLoader()->load<aurora::level::Level>("test:test.level")),
-	                    Application(800, 600, "Test") {
+	MainApplication() : Application(800, 600, "Test"),
+						m_Level(getInstance()->getAssetLoader()->load<aurora::level::Level>("test:test.level")),
+						m_WindowIcon(getInstance()->getAssetLoader()->load<aurora::Icon>("test:test.texture")) {
 		m_Level->setCurrentCamera(1);
 		setLevel(m_Level);
+		getInstance()->getWindow()->setIcon(m_WindowIcon);
 	}
 
-	~MainApplication() override = default;
+	~MainApplication() override {
+		auto a = getInstance()->getAssetLoader();
+		a->unload<aurora::Icon>(m_WindowIcon);
+	}
 
 	void render() override {
 		Application::render();

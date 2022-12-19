@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 #include <vector>
+#include "resources/icon.h"
 #include "resources/framebuffer.h"
 
 namespace aurora {
@@ -37,6 +38,14 @@ namespace aurora {
 		glm::ivec2 getSize();
 		void addFramebuffer(Framebuffer *pFramebuffer);
 		void removeFramebuffer(Framebuffer *pFramebuffer);
+		void setIcon(Icon *pIcon);
+		bool isVisible();
+		bool isReallyVisible();
+		bool isIconified();
+		void hide();
+		void show();
+
+		static void pollEvents();
 
 	private:
 		static void staticWindowSizeChanged([[maybe_unused]] GLFWwindow *pWindow, int pWidth, int pHeight);

@@ -49,9 +49,14 @@ namespace aurora {
 	void Application::run() {
 		while(m_Window->shouldWindowBeOpen()) {
 			auto start = std::chrono::steady_clock::now();
-			render();
+
+			if(m_Window->isReallyVisible()) {
+				render();
+				m_Window->finishFrame();
+			}
+
+			Window::pollEvents();
 			update();
-			m_Window->finishFrame();
 			auto end = std::chrono::steady_clock::now();
 			auto
 				frameDuration = std::chrono::nanoseconds(static_cast<long>(1000000000.0 / (double) m_DesiredFramerate));

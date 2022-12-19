@@ -34,6 +34,8 @@ namespace aurora {
 	}
 
 	void Window::staticWindowSizeChanged([[maybe_unused]] GLFWwindow *pWindow, int pWidth, int pHeight) {
+		if(pWidth == 0 || pHeight == 0) return;
+
 		auto self = reinterpret_cast<Window *>(glfwGetWindowUserPointer(pWindow));
 		global->getImpl()->updateViewportSize(pWidth, pHeight);
 		for(const auto &item: self->m_Framebuffers) {
@@ -50,7 +52,6 @@ namespace aurora {
 	}
 
 	void Window::finishFrame() {
-		glfwPollEvents();
 		global->getImpl()->performFinishFrame(this);
 	}
 
@@ -70,5 +71,33 @@ namespace aurora {
 	void Window::removeFramebuffer(Framebuffer *pFramebuffer) {
 		m_Framebuffers.erase(std::remove(m_Framebuffers.begin(), m_Framebuffers.end(), pFramebuffer),
 		                     m_Framebuffers.end());
+	}
+
+	void Window::setIcon(Icon *pIcon) {
+		glfwSetWindowIcon(m_Window, 1, pIcon->m_Image);
+	}
+
+	bool Window::isVisible() {
+		return glfwGetWindowAttrib(m_Window, GLFW_VISIBLE);
+	}
+
+	bool Window::isIconified() {
+		return glfwGetWindowAttrib(m_Window, GLFW_ICONIFIED);
+	}
+
+	bool Window::isReallyVisible() {
+		return isVisible() && !isIconified();
+	}
+
+	void Window::hide() {
+		glfwHideWindow(m_Window);
+	}
+
+	void Window::show() {
+		glfwShowWindow(m_Window);
+	}
+
+	void Window::pollEvents() {
+		glfwPollEvents();
 	}
 }// namespace aurora

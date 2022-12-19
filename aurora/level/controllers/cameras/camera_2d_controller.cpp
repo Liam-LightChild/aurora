@@ -43,6 +43,8 @@ namespace aurora::level {
 	}
 
 	void Camera2DController::updateMatrices() {
+		if(!global->getWindow()->isReallyVisible()) return;
+
 		auto wSize = global->getWindow()->getSize();
 		auto t = m_Scale;
 		auto r = ((float) wSize.x / (float) wSize.y) * m_Scale;

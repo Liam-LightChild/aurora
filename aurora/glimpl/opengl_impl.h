@@ -3,8 +3,6 @@
  * https://github.com/liam-lightchild/aurora
  */
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCInconsistentNamingInspection"
 #ifndef AURORA_OPENGL_IMPL_H
 #define AURORA_OPENGL_IMPL_H
 
@@ -14,12 +12,12 @@ namespace aurora {
 
 	// Base class is abstract and cannot be used.
 	template<int major, int minor>
-	class OpenGLImplementation : public Implementation {
+	class OpenGlImplementation : public Implementation {
 	};
 
 	// See base class for useful method descriptions.
 	template<>
-	class OpenGLImplementation<3, 2> : public Implementation {
+	class OpenGlImplementation<3, 2> : public Implementation {
 		/*
 		 * Contains an ambiguous reference to a resource created by
 		 * OpenGL.
@@ -28,7 +26,7 @@ namespace aurora {
 		public:
 			uint32_t resource;
 
-			explicit Reference(uint32_t resource) : resource(resource) {}
+			explicit Reference(uint32_t pResource) : resource(pResource) {}
 
 			~Reference() override = default;
 		};
@@ -117,12 +115,12 @@ namespace aurora {
 			~DefaultFramebufferReference() override = default;
 		};
 
-		int max1DDim, max2DDim, max3DDim;
+		int m_Max1DDim, m_Max2DDim, m_Max3DDim;
 
 		DefaultFramebufferReference m_DefaultFramebufferRef{0};
 
 	public:
-		~OpenGLImplementation() override = default;
+		~OpenGlImplementation() override = default;
 
 		// See base class for documentation.
 
@@ -178,12 +176,10 @@ namespace aurora {
 	};
 
 	template<>
-	class OpenGLImplementation<4, 5> : public Implementation {
+	class OpenGlImplementation<4, 5> : public Implementation {
 
 	};
 
 }// namespace aurora
 
 #endif// AURORA_OPENGL_IMPL_H
-
-#pragma clang diagnostic pop

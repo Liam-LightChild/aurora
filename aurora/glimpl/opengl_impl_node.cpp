@@ -7,10 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCInconsistentNamingInspection"
-
-bool aurora::checkOpenGLContext(int pMajor, int pMinor) {
+bool aurora::checkOpenGlContext(int pMajor, int pMinor) {
 	glfwDefaultWindowHints();
 	glfwWindowHint(GLFW_VISIBLE, false);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -26,5 +23,3 @@ bool aurora::checkOpenGLContext(int pMajor, int pMinor) {
 	} else if(err == GLFW_NO_ERROR) { return true; }
 	else { throw std::runtime_error(desc); }
 }
-
-#pragma clang diagnostic pop

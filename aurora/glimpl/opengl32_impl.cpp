@@ -51,7 +51,7 @@ namespace aurora {
 		{"MatrixPerspective", ShaderUniformType::MatrixPerspective}
 	};
 
-	ObjRefBase *OpenGLImplementation<3, 2>::createShader(const aether::Shader &pShader) {
+	ObjRefBase *OpenGlImplementation<3, 2>::createShader(const aether::Shader &pShader) {
 		int program = glCreateProgram();
 
 		for(const auto &item: pShader.parts) {
@@ -107,7 +107,7 @@ namespace aurora {
 		return ref;
 	}
 
-	void OpenGLImplementation<3, 2>::destroyShader(ObjRefBase *pObject) noexcept {
+	void OpenGlImplementation<3, 2>::destroyShader(ObjRefBase *pObject) noexcept {
 		auto ref = dynamic_cast<ShaderReference *>(pObject);
 		if(ref == nullptr) { return; }
 
@@ -115,39 +115,39 @@ namespace aurora {
 		delete ref;
 	}
 
-	void OpenGLImplementation<3, 2>::updateViewportSize(int pWidth, int pHeight) {
+	void OpenGlImplementation<3, 2>::updateViewportSize(int pWidth, int pHeight) {
 		glViewport(0, 0, pWidth, pHeight);
 	}
 
-	void OpenGLImplementation<3, 2>::setupWindowHints() {
+	void OpenGlImplementation<3, 2>::setupWindowHints() {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	}
 
-	void OpenGLImplementation<3, 2>::setupWindowPostCreate() {
+	void OpenGlImplementation<3, 2>::setupWindowPostCreate() {
 		glewExperimental = true;
 		glewInit();
 
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max2DDim);
-		max1DDim = max2DDim;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &m_Max2DDim);
+		m_Max1DDim = m_Max2DDim;
 
-		glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DDim);
+		glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &m_Max3DDim);
 	}
 
-	void OpenGLImplementation<3, 2>::performFinishFrame(Window *pWindow) {
+	void OpenGlImplementation<3, 2>::performFinishFrame(Window *pWindow) {
 		glfwSwapBuffers(pWindow->getGlfw());
 	}
 
-	void OpenGLImplementation<3, 2>::setClearColor(float pRed, float pGreen, float pBlue, float pAlpha) {
+	void OpenGlImplementation<3, 2>::setClearColor(float pRed, float pGreen, float pBlue, float pAlpha) {
 		glClearColor(pRed, pGreen, pBlue, pAlpha);
 	}
 
-	void OpenGLImplementation<3, 2>::performClear(ClearOptions pOptions) {
+	void OpenGlImplementation<3, 2>::performClear(ClearOptions pOptions) {
 		GLenum bufs = 0;
 		if(pOptions.color) { bufs |= GL_COLOR_BUFFER_BIT; }
 		if(pOptions.depth) { bufs |= GL_DEPTH_BUFFER_BIT; }
@@ -155,13 +155,13 @@ namespace aurora {
 		glClear(bufs);
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::createBuffer(BufferType pType) {
+	ObjRefBase *OpenGlImplementation<3, 2>::createBuffer(BufferType pType) {
 		GLuint buf;
 		glGenBuffers(1, &buf);
 		return new BufferReference(buf, pType);
 	}
 
-	void OpenGLImplementation<3, 2>::destroyBuffer(ObjRefBase *pObject) noexcept {
+	void OpenGlImplementation<3, 2>::destroyBuffer(ObjRefBase *pObject) noexcept {
 		auto ref = dynamic_cast<BufferReference *>(pObject);
 		if(ref == nullptr) { return; }
 
@@ -169,14 +169,14 @@ namespace aurora {
 		delete ref;
 	}
 
-	void OpenGLImplementation<3, 2>::updateBufferData(ObjRefBase *pObject, void *pData, size_t pSize) {
+	void OpenGlImplementation<3, 2>::updateBufferData(ObjRefBase *pObject, void *pData, size_t pSize) {
 		auto ref = dynamic_cast<BufferReference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid buffer reference"); }
 		glBindBuffer(GL_ARRAY_BUFFER, ref->resource);
 		glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(pSize), pData, GL_STATIC_DRAW);
 	}
 
-	void OpenGLImplementation<3, 2>::updateBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) {
+	void OpenGlImplementation<3, 2>::updateBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) {
 		auto ref = dynamic_cast<BufferReference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid buffer reference"); }
 		glBindBuffer(GL_ARRAY_BUFFER, ref->resource);
@@ -192,7 +192,7 @@ namespace aurora {
 	}
 
 	void
-	OpenGLImplementation<3, 2>::retrieveBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) {
+	OpenGlImplementation<3, 2>::retrieveBufferData(ObjRefBase *pObject, void *pData, size_t pSize, size_t pOffset) {
 		auto ref = dynamic_cast<BufferReference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid buffer reference"); }
 		glBindBuffer(GL_ARRAY_BUFFER, ref->resource);
@@ -207,13 +207,13 @@ namespace aurora {
 		glGetBufferSubData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(pOffset), static_cast<GLsizeiptr>(pSize), pData);
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::createTexture2D() {
+	ObjRefBase *OpenGlImplementation<3, 2>::createTexture2D() {
 		uint32_t tex;
 		glGenTextures(1, &tex);
 		return new Reference(tex);
 	}
 
-	void OpenGLImplementation<3, 2>::destroyTexture2D(ObjRefBase *pObject) noexcept {
+	void OpenGlImplementation<3, 2>::destroyTexture2D(ObjRefBase *pObject) noexcept {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { return; }
 
@@ -221,7 +221,7 @@ namespace aurora {
 		delete ref;
 	}
 
-	void OpenGLImplementation<3, 2>::setTexture2DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) {
+	void OpenGlImplementation<3, 2>::setTexture2DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -239,7 +239,7 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, e);
 	}
 
-	void OpenGLImplementation<3, 2>::setTexture2DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) {
+	void OpenGlImplementation<3, 2>::setTexture2DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -256,7 +256,7 @@ namespace aurora {
 	}
 
 	void
-	OpenGLImplementation<3, 2>::setTexture2DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) {
+	OpenGlImplementation<3, 2>::setTexture2DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -285,12 +285,12 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture2DData(ObjRefBase *pObject, const sail::image &pImage) {
+	void OpenGlImplementation<3, 2>::updateTexture2DData(ObjRefBase *pObject, const sail::image &pImage) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
-		if(pImage.width() > max2DDim || pImage.height() > max2DDim) {
-			throw ETextureSize("texture too large; no dimension can be larger than " + std::to_string(max2DDim));
+		if(pImage.width() > m_Max2DDim || pImage.height() > m_Max2DDim) {
+			throw ETextureSize("texture too large; no dimension can be larger than " + std::to_string(m_Max2DDim));
 		}
 
 		auto img = pImage.convert_to(SAIL_PIXEL_FORMAT_BPP32_RGBA);
@@ -306,7 +306,7 @@ namespace aurora {
 		             img.pixels());
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture2DMipmap(ObjRefBase *pObject) {
+	void OpenGlImplementation<3, 2>::updateTexture2DMipmap(ObjRefBase *pObject) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -314,7 +314,7 @@ namespace aurora {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::createDrawObject(const DrawObjectOptions &pOptions) {
+	ObjRefBase *OpenGlImplementation<3, 2>::createDrawObject(const DrawObjectOptions &pOptions) {
 		uint32_t vao;
 		glCreateVertexArrays(1, &vao);
 		glBindVertexArray(vao);
@@ -406,7 +406,7 @@ namespace aurora {
 		return new DrawObjectReference(vao, pOptions);
 	}
 
-	void OpenGLImplementation<3, 2>::destroyDrawObject(ObjRefBase *pObject) noexcept {
+	void OpenGlImplementation<3, 2>::destroyDrawObject(ObjRefBase *pObject) noexcept {
 		auto ref = dynamic_cast<DrawObjectReference *>(pObject);
 		if(ref == nullptr) { return; }
 
@@ -414,7 +414,7 @@ namespace aurora {
 		delete ref;
 	}
 
-	void OpenGLImplementation<3, 2>::performDraw(ObjRefBase *pDrawObject, const MatrixSet &pMatrices) {
+	void OpenGlImplementation<3, 2>::performDraw(ObjRefBase *pDrawObject, const MatrixSet &pMatrices) {
 		auto ref = dynamic_cast<DrawObjectReference *>(pDrawObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid draw object reference"); }
 
@@ -515,13 +515,13 @@ namespace aurora {
 		glBindVertexArray(0);
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::createTexture1D() {
+	ObjRefBase *OpenGlImplementation<3, 2>::createTexture1D() {
 		uint32_t tex;
 		glGenTextures(1, &tex);
 		return new Reference(tex);
 	}
 
-	void OpenGLImplementation<3, 2>::destroyTexture1D(ObjRefBase *pObject) noexcept {
+	void OpenGlImplementation<3, 2>::destroyTexture1D(ObjRefBase *pObject) noexcept {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { return; }
 
@@ -529,7 +529,7 @@ namespace aurora {
 		delete ref;
 	}
 
-	void OpenGLImplementation<3, 2>::setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) {
+	void OpenGlImplementation<3, 2>::setTexture1DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -546,7 +546,7 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, e);
 	}
 
-	void OpenGLImplementation<3, 2>::setTexture1DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) {
+	void OpenGlImplementation<3, 2>::setTexture1DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -562,7 +562,7 @@ namespace aurora {
 	}
 
 	void
-	OpenGLImplementation<3, 2>::setTexture1DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) {
+	OpenGlImplementation<3, 2>::setTexture1DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -591,7 +591,7 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, mag);
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture1DData(ObjRefBase *pObject, int pWidth, const uint8_t *pDataRgba) {
+	void OpenGlImplementation<3, 2>::updateTexture1DData(ObjRefBase *pObject, int pWidth, const uint8_t *pDataRgba) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -606,7 +606,7 @@ namespace aurora {
 		             pDataRgba);
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture1DMipmap(ObjRefBase *pObject) {
+	void OpenGlImplementation<3, 2>::updateTexture1DMipmap(ObjRefBase *pObject) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -614,13 +614,13 @@ namespace aurora {
 		glGenerateMipmap(GL_TEXTURE_1D);
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::createTexture3D() {
+	ObjRefBase *OpenGlImplementation<3, 2>::createTexture3D() {
 		uint32_t tex;
 		glGenTextures(1, &tex);
 		return new Reference(tex);
 	}
 
-	void OpenGLImplementation<3, 2>::destroyTexture3D(ObjRefBase *pObject) noexcept {
+	void OpenGlImplementation<3, 2>::destroyTexture3D(ObjRefBase *pObject) noexcept {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { return; }
 
@@ -628,7 +628,7 @@ namespace aurora {
 		delete ref;
 	}
 
-	void OpenGLImplementation<3, 2>::setTexture3DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) {
+	void OpenGlImplementation<3, 2>::setTexture3DWrapProperty(ObjRefBase *pObject, TextureWrapType pWrap) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -647,7 +647,7 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, e);
 	}
 
-	void OpenGLImplementation<3, 2>::setTexture3DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) {
+	void OpenGlImplementation<3, 2>::setTexture3DWrapPropertyBorder(ObjRefBase *pObject, glm::vec3 pColor) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -665,7 +665,7 @@ namespace aurora {
 	}
 
 	void
-	OpenGLImplementation<3, 2>::setTexture3DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) {
+	OpenGlImplementation<3, 2>::setTexture3DFilter(ObjRefBase *pObject, TextureMinFilter pMin, TextureMagFilter pMag) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -694,7 +694,7 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, mag);
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth,
+	void OpenGlImplementation<3, 2>::updateTexture3DData(ObjRefBase *pObject, int pWidth, int pHeight, int pDepth,
 	                                                     const uint8_t *pDataRgba) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
@@ -712,7 +712,7 @@ namespace aurora {
 		             pDataRgba);
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture3DMipmap(ObjRefBase *pObject) {
+	void OpenGlImplementation<3, 2>::updateTexture3DMipmap(ObjRefBase *pObject) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
 
@@ -720,7 +720,7 @@ namespace aurora {
 		glGenerateMipmap(GL_TEXTURE_3D);
 	}
 
-	void OpenGLImplementation<3, 2>::updateTexture2DData(ObjRefBase *pObject, int pWidth, int pHeight,
+	void OpenGlImplementation<3, 2>::updateTexture2DData(ObjRefBase *pObject, int pWidth, int pHeight,
 	                                                     const uint8_t *pDataRgba) {
 		auto ref = dynamic_cast<Reference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid texture reference"); }
@@ -737,7 +737,7 @@ namespace aurora {
 		             pDataRgba);
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::createFramebuffer(int pWidth, int pHeight) {
+	ObjRefBase *OpenGlImplementation<3, 2>::createFramebuffer(int pWidth, int pHeight) {
 		uint32_t resource;
 		glGenFramebuffers(1, &resource);
 		auto ref = new FramebufferReference(resource, nullptr, nullptr, pWidth, pHeight);
@@ -745,7 +745,7 @@ namespace aurora {
 		return ref;
 	}
 
-	void OpenGLImplementation<3, 2>::reinitializeFramebuffer(ObjRefBase *pObject, int pWidth, int pHeight) {
+	void OpenGlImplementation<3, 2>::reinitializeFramebuffer(ObjRefBase *pObject, int pWidth, int pHeight) {
 		auto ref = dynamic_cast<FramebufferReference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid framebuffer reference"); }
 
@@ -810,7 +810,7 @@ namespace aurora {
 		ref->height = pHeight;
 	}
 
-	void OpenGLImplementation<3, 2>::destroyFramebuffer(ObjRefBase *pObject) noexcept {
+	void OpenGlImplementation<3, 2>::destroyFramebuffer(ObjRefBase *pObject) noexcept {
 		auto ref = dynamic_cast<FramebufferReference *>(pObject);
 		if(ref == nullptr) { return; }
 
@@ -824,21 +824,21 @@ namespace aurora {
 		delete ref;
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::getFramebufferColorTexture2D(ObjRefBase *pObject) {
+	ObjRefBase *OpenGlImplementation<3, 2>::getFramebufferColorTexture2D(ObjRefBase *pObject) {
 		auto ref = dynamic_cast<FramebufferReference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid framebuffer reference"); }
 
 		return ref->colorTexture;
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::getFramebufferDepthTexture2D(ObjRefBase *pObject) {
+	ObjRefBase *OpenGlImplementation<3, 2>::getFramebufferDepthTexture2D(ObjRefBase *pObject) {
 		auto ref = dynamic_cast<FramebufferReference *>(pObject);
 		if(ref == nullptr) { throw EInvalidRef("invalid framebuffer reference"); }
 
 		return ref->depthTexture;
 	}
 
-	void OpenGLImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) {
+	void OpenGlImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) {
 		auto refs = dynamic_cast<FramebufferReference *>(pSource);
 		if(refs == nullptr) { throw EInvalidRef("invalid framebuffer reference"); }
 
@@ -857,7 +857,7 @@ namespace aurora {
 		}
 	}
 
-	void OpenGLImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pSourceStartX,
+	void OpenGlImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pSourceStartX,
 	                                                        int pSourceStartY,
 	                                                        int pTargetStartX, int pTargetStartY, int pWidth,
 	                                                        int pHeight) {
@@ -879,11 +879,11 @@ namespace aurora {
 		}
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::getDefaultFramebuffer() {
+	ObjRefBase *OpenGlImplementation<3, 2>::getDefaultFramebuffer() {
 		return &m_DefaultFramebufferRef;
 	}
 
-	void OpenGLImplementation<3, 2>::activateFramebuffer(ObjRefBase *pObject) {
+	void OpenGlImplementation<3, 2>::activateFramebuffer(ObjRefBase *pObject) {
 		if(dynamic_cast<DefaultFramebufferReference *>(pObject)) {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		} else {

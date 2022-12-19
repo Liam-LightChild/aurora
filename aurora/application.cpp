@@ -12,7 +12,7 @@ namespace aurora {
 	Application::Application() {
 		init();
 		auto implFinder = new aurora::ImplementationFinder();
-		implFinder->registerImpl(new aurora::OpenGLImplementationNode<3, 2>);
+		implFinder->registerImpl(new aurora::OpenGlImplementationNode<3, 2>);
 
 		m_Instance = new aurora::Instance(implFinder, ".");
 		aurora::global = m_Instance;

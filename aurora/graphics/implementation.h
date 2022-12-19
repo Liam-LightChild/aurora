@@ -677,20 +677,17 @@ namespace aurora {
 		virtual ObjRefBase *getFramebufferColorTexture2D(ObjRefBase *pObject) = 0;
 
 		/**
-		 * Gets the depth and stencil texture from the specified framebuffer resource.
-		 * Both components are combined into one.
+		 * Gets the depth texture from the specified framebuffer resource.
 		 *
-		 * @todo Unsupported: Depth-stencil textures.
 		 * @param pObject Reference to the framebuffer to get the texture from.
 		 * @return Texture-2d reference when present; nullptr if the framebuffer
-		 * implementation does not create depth-stencil textures, or uses a non-texture
-		 * compatible implementation. The texture-2d returned should use red for depth
-		 * and green for stencil.
+		 * implementation does not create depth textures, or uses a non-texture
+		 * compatible implementation.
 		 * @throws EInvalidRef The reference does not refer to a framebuffer.
 		 * @throws EInvalidRef The default framebuffer was passed.
 		 * @throws std::runtime_error Possible implementation-dependent errors.
 		 */
-		virtual ObjRefBase *getFramebufferDepthStencilTexture2D(ObjRefBase *pObject) = 0;
+		virtual ObjRefBase *getFramebufferDepthTexture2D(ObjRefBase *pObject) = 0;
 
 		/**
 		 * Copies the data from one framebuffer to another. This expects that pTarget

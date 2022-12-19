@@ -86,24 +86,20 @@ namespace aurora {
 		 * Extends the Reference class to include information about the
 		 * objects contained within framebuffers.
 		 *
-		 * The colorTexture and depthStencilRendernode are both discarded
+		 * The colorTexture and depthTexture are both discarded
 		 * when the object is destroyed.
 		 */
 		class FramebufferReference : public Reference {
 		public:
 			Reference *colorTexture;
-
-			/*
-			 * Refers to a renderbuffer.
-			 */
-			Reference *depthStencilRendernode;
+			Reference *depthTexture;
 
 			int width, height;
 
 			FramebufferReference(uint32_t pResource, Reference *pColorTexture, Reference *pDepthStencilTexture,
 			                     int pWidth,
 			                     int pHeight)
-				: Reference(pResource), colorTexture(pColorTexture), depthStencilRendernode(pDepthStencilTexture),
+				: Reference(pResource), colorTexture(pColorTexture), depthTexture(pDepthStencilTexture),
 				  width(pWidth), height(pHeight) {}
 
 			~FramebufferReference() override = default;
@@ -173,7 +169,7 @@ namespace aurora {
 		void reinitializeFramebuffer(ObjRefBase *pObject, int pWidth, int pHeight) override;
 		void destroyFramebuffer(ObjRefBase *pObject) noexcept override;
 		ObjRefBase *getFramebufferColorTexture2D(ObjRefBase *pObject) override;
-		ObjRefBase *getFramebufferDepthStencilTexture2D(ObjRefBase *pObject) override;
+		ObjRefBase *getFramebufferDepthTexture2D(ObjRefBase *pObject) override;
 		void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) override;
 		void performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget, int pSourceStartX, int pSourceStartY,
 		                            int pTargetStartX, int pTargetStartY, int pWidth, int pHeight) override;

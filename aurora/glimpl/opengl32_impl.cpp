@@ -752,10 +752,10 @@ namespace aurora {
 		glBindFramebuffer(GL_FRAMEBUFFER, ref->resource);
 
 		if(ref->colorTexture != nullptr) { glDeleteTextures(1, &ref->colorTexture->resource); }
-		if(ref->depthStencilRendernode != nullptr) glDeleteRenderbuffers(1, &ref->depthStencilRendernode->resource);
+		if(ref->depthTexture != nullptr) glDeleteRenderbuffers(1, &ref->depthTexture->resource);
 
 		delete ref->colorTexture;
-		delete ref->depthStencilRendernode;
+		delete ref->depthTexture;
 
 		uint32_t colTex;
 		glGenTextures(1, &colTex);
@@ -765,14 +765,21 @@ namespace aurora {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pWidth, pHeight, 0, GL_RGBA, GL_FLOAT, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pWidth, pHeight, 0, GL_RGB, GL_FLOAT, nullptr);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colTex, 0);
 
-		uint32_t depthStencilRbo;
-		glGenRenderbuffers(1, &depthStencilRbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, depthStencilRbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, pWidth, pHeight);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilRbo);
+		uint32_t depthTexture;
+		glGenTextures(1, &depthTexture);
+		glBindTexture(GL_TEXTURE_2D, depthTexture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, pWidth, pHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 
 		auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -798,7 +805,7 @@ namespace aurora {
 		}
 
 		ref->colorTexture = new Reference(colTex);
-		ref->depthStencilRendernode = new Reference(depthStencilRbo);
+		ref->depthTexture = new Reference(depthTexture);
 		ref->width = pWidth;
 		ref->height = pHeight;
 	}
@@ -808,10 +815,10 @@ namespace aurora {
 		if(ref == nullptr) { return; }
 
 		if(ref->colorTexture != nullptr) { glDeleteTextures(1, &ref->colorTexture->resource); }
-		if(ref->depthStencilRendernode != nullptr) glDeleteRenderbuffers(1, &ref->depthStencilRendernode->resource);
+		if(ref->depthTexture != nullptr) { glDeleteTextures(1, &ref->depthTexture->resource); }
 
 		delete ref->colorTexture;
-		delete ref->depthStencilRendernode;
+		delete ref->depthTexture;
 
 		glDeleteFramebuffers(1, &ref->resource);
 		delete ref;
@@ -824,9 +831,11 @@ namespace aurora {
 		return ref->colorTexture;
 	}
 
-	ObjRefBase *OpenGLImplementation<3, 2>::getFramebufferDepthStencilTexture2D(ObjRefBase *pObject) {
-		BOOST_LOG_TRIVIAL(error) << "Not implemented: Depth + Stencil textures on framebuffers in Aurora OpenGL 3.2";
-		return nullptr;
+	ObjRefBase *OpenGLImplementation<3, 2>::getFramebufferDepthTexture2D(ObjRefBase *pObject) {
+		auto ref = dynamic_cast<FramebufferReference *>(pObject);
+		if(ref == nullptr) { throw EInvalidRef("invalid framebuffer reference"); }
+
+		return ref->depthTexture;
 	}
 
 	void OpenGLImplementation<3, 2>::performBlitFramebuffer(ObjRefBase *pSource, ObjRefBase *pTarget) {

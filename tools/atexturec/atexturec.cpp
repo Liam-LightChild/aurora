@@ -1,6 +1,7 @@
 #include <aurora/aether/aether.h>
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <fstream>
 #include <nlohmann/json.hpp>
 
 const char *info = R"(

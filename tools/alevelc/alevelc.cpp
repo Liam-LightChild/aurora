@@ -6,6 +6,7 @@
 #include <aurora/aether/aether.h>
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <fstream>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>

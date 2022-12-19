@@ -5,6 +5,7 @@
 
 #include "texture_2d.h"
 #include "../global.h"
+#include <fstream>
 
 namespace aurora {
 	Texture2D::Texture2D(ObjRefBase *pReference) : m_Reference(pReference) {}

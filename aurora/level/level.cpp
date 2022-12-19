@@ -7,6 +7,7 @@
 #include "object.h"
 #include "controller.h"
 #include "aurora/global.h"
+#include <fstream>
 
 namespace aurora::level {
 	Level::Level() {
